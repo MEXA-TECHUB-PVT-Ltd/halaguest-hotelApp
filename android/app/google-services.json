@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "370012518125",
+    "project_id": "halaguest-hotel",
+    "storage_bucket": "halaguest-hotel.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:370012518125:android:50682f83c55e70616ffee4",
+        "android_client_info": {
+          "package_name": "com.halaguesthotelapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "370012518125-fi86dhcnu01ef26r5d3vg36l7hlo7867.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.halaguesthotelapp",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "370012518125-ssn7554c3itds2d824f4t0b11su9e1aa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDT7yzQyHcqvx_TJ9BnIeffAC25_X1HcqY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "370012518125-ssn7554c3itds2d824f4t0b11su9e1aa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

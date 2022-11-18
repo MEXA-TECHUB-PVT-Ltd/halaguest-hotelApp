@@ -39,6 +39,10 @@ import { BASE_URL } from '../../../utills/ApiRootUrl';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
+/////////////////////////////////firebase///////////////////////
+import auth from '@react-native-firebase/auth';
+import { checkPermission } from '../../../api/FCMToken';
+
 const Verification = ({ navigation,route }) => {
   console.log("obj:",route.params)
 
@@ -51,6 +55,8 @@ const Verification = ({ navigation,route }) => {
 
         ///////////////Modal States///////////////
         const [modalVisible, setModalVisible] = useState(false);
+        const [modalVisible1, setModalVisible1] = useState(false);
+        const [modalVisible2, setModalVisible2] = useState(false);
 
   /////////////timer state///////////////
   const [disabletimer, setdisableTimer] = useState(false);
@@ -132,8 +138,63 @@ axios({
     console.log('error', error);
   });
 };
+
+const [confirm, setConfirm] = React.useState(null);
+
+const [code, setCode] = React.useState('');
+const [confirmcode, setconfirmCode] = React.useState('');
+
+  // Set an initializing state whilst Firebase connects
+  const [initializing, setInitializing] = React.useState(true);
+  const [user, setUser] = React.useState();
+
+  // Handle user state changes
+  const onAuthStateChanged=(user) =>{
+    console.log('user detail HermesInternal',user)
+    // setUser(user);
+    // if (initializing) setInitializing(false);
+  }
+
+  React.useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+// Handle the button press
+const signInWithPhoneNumber=async(phoneNumber) =>{
+  const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+  setConfirm(confirmation);
+  console.log('code.',confirmation.verificationId);
+}
+
+const confirmCode=async()=> {
+  console.log('user code.',value);
+  try {
+    var data= auth.PhoneAuthProvider.credential(confirm.verificationId, value);
+    //var data=await confirm.confirm(code);
+    console.log('user data after verification.',data);
+    setconfirmCode(data.secret)
+    if(data.secret === value)
+    {
+      //CheckLogin()
+      //alert('suceffully matched otp')
+    }
+    else 
+    {
+      setModalVisible1(true)
+      //alert('error in matched otp')
+    }
+  } catch (error) {
+    console.log('Invalid code.');
+  }
+}
   useEffect(() => {
-  
+    //signInWithPhoneNumber('+'+predata.Phonenumber)
+             checkPermission().then(result => {
+            console.log("here in google password",result);
+            //setFCMToken(result)
+            //do something with the result
+          })
   },[]);
   return (
 
@@ -230,7 +291,10 @@ disabled={disabletimer}
             widthset={'70%'}
             topDistance={0}
             //onPress={() => verifyno()}
-            onPress={()=>   CheckLogin()   }
+            onPress={()=> 
+              confirmCode()
+                //CheckLogin() 
+                }
           /></View>
    <CustomModal 
                 modalVisible={modalVisible}
@@ -240,6 +304,24 @@ disabled={disabletimer}
                 leftbuttontext={'CANCLE'}
                 rightbuttontext={'OK'}
  onPress={()=> {setModalVisible(false),navigation.navigate('BottomTab')}}
+                /> 
+                   <CustomModal 
+                modalVisible={modalVisible1}
+                CloseModal={() => setModalVisible1(false)}
+                Icon={appImages.CheckCircle}
+                text={'OTP Not Matched Confirm it or Resend it'}
+                leftbuttontext={'CANCLE'}
+                rightbuttontext={'OK'}
+ onPress={()=> {setModalVisible1(false)}}
+                /> 
+                   <CustomModal 
+                modalVisible={modalVisible2}
+                CloseModal={() => setModalVisible2(false)}
+                Icon={appImages.CheckCircle}
+                text={'Account Verified Successfully'}
+                leftbuttontext={'CANCLE'}
+                rightbuttontext={'OK'}
+ onPress={()=> {setModalVisible2(false),navigation.navigate('BottomTab')}}
                 /> 
 </SafeAreaView>
 
