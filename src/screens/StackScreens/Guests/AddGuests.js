@@ -19,6 +19,7 @@ import {RadioButton,Snackbar} from 'react-native-paper';
 import CamerBottomSheet from '../../../components/CameraBottomSheet/CameraBottomSheet';
 import CustomButtonhere from '../../../components/Button/CustomButton';
 import CustomHeader from '../../../components/Header/CustomHeader';
+import CustomModal from '../../../components/Modal/CustomModal';
 
 ////////////////////redux////////////
 import {useSelector, useDispatch} from 'react-redux';
@@ -75,6 +76,7 @@ const AddGuests = ({navigation}) => {
   const ref_input5 = useRef();
   const ref_input6 = useRef();
   const ref_input7 = useRef();
+  const ref_input8 = useRef();
 
    /////////button states/////////////
  const [loading, setloading] = useState(0);
@@ -109,8 +111,10 @@ const AddGuests = ({navigation}) => {
 
   //////////////////////Api Calling/////////////////
   const CreateGuests = async () => {
+    var user= await AsyncStorage.getItem('Userid')
+    console.log("order request function",user)
     var date = new Date();
-    console.log('userid:', date, checked,phone_no,BASE_URL + 'api/driver/createDriver');
+    console.log('userid:', date, checked,phone_no,);
 
     axios({
       method: 'POST',
@@ -127,19 +131,15 @@ const AddGuests = ({navigation}) => {
         name: name,
         phoneNo: phone_no,
         created_at: date,
-        hotel_id:'635b84dc4f7c2392c3abbd1a',
-        status: 'block',
-        device_token: '354ref',
-        driver_location: 'Pir Mehr Ali Shah Arid Agriculture University - PMAS AAUR, Shamsabad, Muree، Road, Punjab، Rawalpindi, 46000',
-        driver_lat: '33.601920',
-        driver_log: '73.038080' 
+        hotel_id:user,
+
       },
     })
       .then(function (response) {
         console.log('response', JSON.stringify(response.data));
             setloading(0);
           setdisable(0);
- 
+          setModalVisible(true)
       })
       .catch(function (error) {
         console.log('error', error);
@@ -305,9 +305,14 @@ const AddGuests = ({navigation}) => {
    
           </TouchableOpacity>
      <TextInput
+         ref={ref_input3}
        onChangeText={setnumber}
        autoCapitalize="none"
        keyboardType='number-pad'
+       returnKeyType={'next'}
+       onSubmitEditing={() => {
+         ref_input4.current.focus();
+       }}
        placeholderTextColor={Colors.inputtextcolor}
        style={[Inputstyles.input,{width:wp(62)}]}
      />
@@ -333,22 +338,8 @@ const AddGuests = ({navigation}) => {
               <Text style={Inputstyles.inputtoptext}>City</Text>
               <View style={Inputstyles.action}>
                 <TextInput
-                  ref={ref_input3}
-                  onChangeText={setCity}
-                  returnKeyType={'next'}
-                  onSubmitEditing={() => {
-                    ref_input4.current.focus();
-                  }}
-                  blurOnSubmit={false}
-                  placeholderTextColor={Colors.inputtextcolor}
-                  style={Inputstyles.input}
-                />
-              </View>
-              <Text style={Inputstyles.inputtoptext}>State</Text>
-              <View style={Inputstyles.action}>
-                <TextInput
                   ref={ref_input4}
-                  onChangeText={setState}
+                  onChangeText={setCity}
                   returnKeyType={'next'}
                   onSubmitEditing={() => {
                     ref_input5.current.focus();
@@ -358,11 +349,11 @@ const AddGuests = ({navigation}) => {
                   style={Inputstyles.input}
                 />
               </View>
-              <Text style={Inputstyles.inputtoptext}>Zip_Code</Text>
+              <Text style={Inputstyles.inputtoptext}>State</Text>
               <View style={Inputstyles.action}>
                 <TextInput
                   ref={ref_input5}
-                  onChangeText={setZipcode}
+                  onChangeText={setState}
                   returnKeyType={'next'}
                   onSubmitEditing={() => {
                     ref_input6.current.focus();
@@ -372,11 +363,11 @@ const AddGuests = ({navigation}) => {
                   style={Inputstyles.input}
                 />
               </View>
-              <Text style={Inputstyles.inputtoptext}>Country</Text>
+              <Text style={Inputstyles.inputtoptext}>Zip_Code</Text>
               <View style={Inputstyles.action}>
                 <TextInput
                   ref={ref_input6}
-                  onChangeText={setCountry}
+                  onChangeText={setZipcode}
                   returnKeyType={'next'}
                   onSubmitEditing={() => {
                     ref_input7.current.focus();
@@ -386,10 +377,24 @@ const AddGuests = ({navigation}) => {
                   style={Inputstyles.input}
                 />
               </View>
-              <Text style={Inputstyles.inputtoptext}>Street Address</Text>
+              <Text style={Inputstyles.inputtoptext}>Country</Text>
               <View style={Inputstyles.action}>
                 <TextInput
                   ref={ref_input7}
+                  onChangeText={setCountry}
+                  returnKeyType={'next'}
+                  onSubmitEditing={() => {
+                    ref_input8.current.focus();
+                  }}
+                  blurOnSubmit={false}
+                  placeholderTextColor={Colors.inputtextcolor}
+                  style={Inputstyles.input}
+                />
+              </View>
+              <Text style={Inputstyles.inputtoptext}>Street Address</Text>
+              <View style={Inputstyles.action}>
+                <TextInput
+                  ref={ref_input8}
                   onChangeText={setStreet_address}
                   placeholderTextColor={Colors.inputtextcolor}
                   style={Inputstyles.input}
@@ -456,7 +461,15 @@ const AddGuests = ({navigation}) => {
           }}>
           {snackbarValue.value}
         </Snackbar>
-
+        <CustomModal 
+                modalVisible={modalVisible}
+                CloseModal={() => setModalVisible(false)}
+                Icon={appImages.CheckCircle}
+                text={'Account Verified Successfully'}
+                leftbuttontext={'CANCLE'}
+                rightbuttontext={'OK'}
+ onPress={()=> {setModalVisible(false),navigation.goBack()}}
+                /> 
       </SafeAreaView>
     </ScrollView>
   );

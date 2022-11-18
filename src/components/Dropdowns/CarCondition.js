@@ -6,38 +6,34 @@ import RBSheet from "react-native-raw-bottom-sheet";
 
 ////////////app styles//////////////
 import styles from './styles';
-
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} 
 from 'react-native-responsive-screen';
 
 ////////////////////redux////////////
 import { useSelector, useDispatch } from 'react-redux';
-import { setHotelType } from '../../redux/actions';
+import { setCarCondition,setCarConditionId } from '../../redux/actions';
 
   //////////////////////////app api/////////////////////////
   import axios from 'axios';
 import { BASE_URL } from '../../utills/ApiRootUrl';
   import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const HotelTypes = (props) => {
-
+const CarCondition = (props) => {
+    console.log('here:',props)
     /////////////redux states///////
-    const { HotelTypes} = useSelector(state => state.userReducer);
+    const { condition} = useSelector(state => state.userReducer);
     const dispatch = useDispatch();
-
-   //////////////HotelTypes dropdown////////////////
-   const reflinkddRBSheet = useRef();
 
   //////////dropdownlink data/////////////
   const [dddata, setdddata] = useState()
   const [ddpickvalue, setddpickvalue] = useState()
 
-  ///////////////HotelTypes function///////////////
-    const GetHotelTypes =async () => {
-        console.log('here:',BASE_URL+'api/hotelType/allhotelTypes')
+  ///////////////CarCondition function///////////////
+    const GetCarCondition =async () => {
+        console.log('here:')
         axios({
           method: 'GET',
-          url: BASE_URL+'api/hotelType/allhotelTypes',
+          url: BASE_URL+'api/condition/allConditions',
         })
           .then(function (response) {
             console.log("response", JSON.stringify(response.data))
@@ -49,7 +45,7 @@ const HotelTypes = (props) => {
           })
       }
       useEffect(() => {
-        GetHotelTypes()
+        GetCarCondition()
           }, []);
     return(
         <RBSheet
@@ -72,7 +68,8 @@ const HotelTypes = (props) => {
           container: {
             borderTopLeftRadius:wp(10),
             borderTopRightRadius:wp(10),
-              height:hp(35)
+             // height:hp(95)
+             maxHeight:hp(90),
           }
         }}
         
@@ -83,7 +80,7 @@ const HotelTypes = (props) => {
           marginHorizontal: 0
         }}>
         
-          <Text style={styles.bottomsheettext}>Select Hotel Type</Text>
+          <Text style={styles.bottomsheettext}>Select Car Condition</Text>
         
         </View>
         <FlatList
@@ -91,10 +88,10 @@ const HotelTypes = (props) => {
           renderItem={({ item, index, separators }) => (
             <TouchableOpacity
             onPress={() =>
-              {setddpickvalue(item.name),
-                dispatch(setHotelType(item.name)),
+              {setddpickvalue(item.icon),
+                dispatch(setCarCondition(item.name)),
+                dispatch(setCarConditionId(item._id)),
                 props.refRBSheet.current.close()
-                //reflinkddRBSheet.current.open()
               }}
              >
             <View style={styles.card}>
@@ -112,9 +109,9 @@ const HotelTypes = (props) => {
           keyExtractor={item => item._id}
         
         />
-    
+
         </RBSheet>
     )
 };
 
-export default HotelTypes;
+export default CarCondition;
