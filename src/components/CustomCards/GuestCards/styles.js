@@ -75,7 +75,24 @@ cardtext:
 //marginTop:hp(1)
 
 },
-
+docimagechangeview:
+{
+  width:wp(22),
+  height:hp(4),
+  alignItems:'center',
+  justifyContent:'center',
+  position:'absolute',
+  top:hp(1),
+  right:wp(3),
+  backgroundColor:Colors.Appthemecolor,
+borderRadius:wp(10)
+},
+docimagechangetext:
+{
+color:"white",
+fontSize:hp(1.7),
+fontFamily:fontFamily.Poppins_Regular
+}
   });
   export default styles;
   

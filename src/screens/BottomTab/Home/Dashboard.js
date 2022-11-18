@@ -1,23 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
 import {
-    SafeAreaView, FlatList, StatusBar, ImageBackground,BackHandler,
+    SafeAreaView,StatusBar, 
     ScrollView,
-    Image, View, Text, TouchableOpacity, TextInput,ActivityIndicator
+   Text, TouchableOpacity, 
 } from 'react-native';
-
-////////////////////app pakages//////////////
-import { Checkbox } from 'react-native-paper';
-
-//////////////////app icons////////////////
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import Icon from 'react-native-vector-icons/Ionicons';
 
 //////////////////////app components///////////////
 import DashboardHeader from '../../../components/Header/DashboardHeade';
 import ViewAll from '../../../components/ViewAll/ViewAll';
 import GuestCards from '../../../components/CustomCards/GuestCards/GuestCards';
 import OrdersCards from '../../../components/CustomCards/OrderCards/Orders';
-import CustomCards from '../../../components/CustomCards/CustomCards';
 
 ////////////////////redux////////////
 import { useSelector, useDispatch } from 'react-redux';
@@ -32,54 +24,12 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-nat
 /////////////////////app styles////////////
 import styles from './styles';
 import Colors from '../../../utills/Colors';
-import TopTabstyles from '../../../styles/GlobalStyles/TopTabstyles';
-import Inputstyles from '../../../styles/GlobalStyles/Inputstyles';
 
 /////////////////app images///////////
 import { appImages } from '../../../constant/images';
 
-const Orderss = [
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      title: 'First Item',
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      title: 'Second Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Third Item',
-    },
-    {
-        id: '58694a0f-3da1-471f-bd9556-145571e29d72',
-        title: 'Third Item',
-      },
-  ];
-  const Guestss = [
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      title: 'First Item',
-      img:require('../../../assets/dataimages/hotel.png')
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      title: 'Second Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Third Item',
-    },
-    {
-        id: '58694a0f-3da1-471f-bd9556-145571e29d72',
-        title: 'Third Item',
-      },
-  ];
 
 const Home = ({ navigation }) => {
-
-    //Modal States
-    const [modalVisible, setModalVisible] = useState(false);
 
     const { name, age } = useSelector(state => state.userReducer);
     const dispatch = useDispatch();
@@ -88,10 +38,11 @@ const Home = ({ navigation }) => {
     const [Guests, setGuests] = useState('')
 
     const GetGuests = async () => {
-
+        var user= await AsyncStorage.getItem('Userid')
+        console.log("order request function",user)
         axios({
             method: 'GET',
-            url: BASE_URL + 'api/guest/allGuests',
+            url: BASE_URL + 'api/guest/getAllHotelGuests/'+user,
         })
             .then(async function (response) {
                 console.log("list data here ", response.data)
@@ -125,36 +76,7 @@ const Home = ({ navigation }) => {
         GetOrders()
       
     }, []);
-    useEffect(() => {
-        // back handle exit app
-        BackHandler.addEventListener('hardwareBackPress', backButtonHandler);
-        return () => {
-            BackHandler.removeEventListener('hardwareBackPress', backButtonHandler);
-        };
-    }, []);
-let backHandlerClickCount = 0;
-    const backButtonHandler = () => {
-        const shortToast = message => {
-            Toast.show(message, {
-                duration: Toast.durations.LONG,
-                position: Toast.positions.BOTTOM,
-            });
-        }
-        let backHandlerClickCount;
-        backHandlerClickCount += 1;
-        if ((backHandlerClickCount < 2)) {
-            shortToast('Press again to quit the application');
-        } else {
-            BackHandler.exitApp();
-        }
 
-        // timeout for fade and exit
-        setTimeout(() => {
-            backHandlerClickCount = 0;
-        }, 1000);
-        
-        return true;
-    }
     return (
 <SafeAreaView style={styles.container}>
     <ScrollView 
@@ -171,17 +93,17 @@ let backHandlerClickCount = 0;
                 headerlabel={'Guests'}
                 onpress={() =>navigation.navigate('GuestsList')}
             />
-{ Guestss === ''?null:
-Guestss.slice(0, 3).map((item, key) => (
+{ Guests === ''?null:
+Guests.slice(0, 3).map((item, key) => (
     <GuestCards
-                                        // guestlogo={item.img}
-                                        // guestname={item.name}
-                                        // guestemail={item.email}
-                                        // guestgender={item.gender}
-                                        //guestlogo={item.img}
-                                        guestname={'Guest name here'}
-                                        guestemail={'Email here'}
-                                        guestgender={'Gender Here'}
+                                        guestlogo={item.img}
+                                        guestname={item.name}
+                                        guestemail={item.email}
+                                        guestgender={item.gender}
+                                    
+                                        // guestname={'Guest name here'}
+                                        // guestemail={'Email here'}
+                                        // guestgender={'Gender Here'}
                                     />
 ))
 
@@ -191,19 +113,19 @@ Guestss.slice(0, 3).map((item, key) => (
                 headerlabel={'Orders'}
                 onpress={() =>navigation.navigate('OrderDetail')}
             />
-{Orderss === ''?null:
+{Orders === ''?null:
 
-Orderss.slice(0, 3).map((item, key) => (
+Orders.slice(0, 3).map((item, key) => (
 <OrdersCards
                                       
-                                    //   time={item.flight_time}
-                                    //    price={item.total_amount+'$'}
-                                    //    pickupLoc={item.pickup_location}
-                                    //    dropoffLoc={item.dropoff_location}
-                                       time={'00:00 pm'}
-                                       price={'200'+'$'}
-                                       pickupLoc={'Pickup location here'}
-                                       dropoffLoc={'Drop off location here'}
+                                      time={item.flight_time}
+                                       price={item.total_amount+'$'}
+                                       pickupLoc={item.pickup_location}
+                                       dropoffLoc={item.dropoff_location}
+                                    //    time={'00:00 pm'}
+                                    //    price={'200'+'$'}
+                                    //    pickupLoc={'Pickup location here'}
+                                    //    dropoffLoc={'Drop off location here'}
                                    />
 ))}
 

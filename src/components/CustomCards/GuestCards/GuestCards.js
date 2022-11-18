@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text, ActivityIndicator ,TouchableOpacity} from 'react-native';
 
 ////////////app styles////////////
 import styles from './styles';
@@ -20,8 +20,8 @@ const GuestCards = (props) => {
         <View style={styles.card}>
 
                     <Avatar.Image
-                    //source={{uri:props.guestlogo}}
-                      source={require('../../../assets/dataimages/user.png')}
+                    source={{uri:props.guestlogo}}
+                     // source={require('../../../assets/dataimages/user.png')}
                         size={65}
                         style={{backgroundColor:Colors.appgreycolor}}
                     />
@@ -37,7 +37,14 @@ const GuestCards = (props) => {
                         </Text>
 
                     </View>
-      
+                    {props.type === "CreateTrip"?
+                            <TouchableOpacity 
+                            style={styles.docimagechangeview}
+                            onPress={ props.onpresstype }>
+                    <Text style={styles.docimagechangetext}>Change</Text>
+                    </TouchableOpacity>
+                :null}
+            
             </View>
 
 

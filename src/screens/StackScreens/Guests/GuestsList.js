@@ -16,7 +16,7 @@ import GuestCards from '../../../components/CustomCards/GuestCards/GuestCards';
 
 ////////////////////redux////////////
 import {useSelector, useDispatch} from 'react-redux';
-import { setNavPlace } from '../../../redux/actions';
+import { setNavPlace,setGuestDetails } from '../../../redux/actions';
 
 ////////////////api////////////////
 import axios from 'axios';
@@ -29,36 +29,6 @@ import styles from './styles';
 import Colors from '../../../utills/Colors';
 import Inputstyles from '../../../styles/GlobalStyles/Inputstyles';
 
-/////////////////app images///////////
-import { appImages } from '../../../constant/images';
-
-const Guestss = [
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      title: 'First Item',
-      img:require('../../../assets/dataimages/hotel.png')
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      title: 'Second Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Third Item',
-    },
-    {
-        id: '58694a0f-3da1-471f-bd9556-145571e29d72',
-        title: 'Third Item',
-      },
-      {
-        id: '5869r4a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
-      },
-      {
-          id: '58694a0f-3da1-471f-bd9rr556-145571e29d72',
-          title: 'Third Item',
-        },
-  ];
 
 const GuestsList = ({ navigation,route }) => {
 
@@ -71,13 +41,15 @@ const GuestsList = ({ navigation,route }) => {
   const dispatch = useDispatch();
 
 
-    ///////////// Get Guests states and API function/////////////
+    /////////////main menu status states/////////////
     const [Guests, setGuests] = useState('')
 
     const GetGuests = async () => {
+        var user= await AsyncStorage.getItem('Userid')
+        console.log("order request function",user)
         axios({
             method: 'GET',
-            url: BASE_URL + 'api/guest/allGuests',
+            url: BASE_URL + 'api/guest/getAllHotelGuests/'+user,
         })
             .then(async function (response) {
                 console.log("list data here ", response.data)
@@ -86,13 +58,27 @@ const GuestsList = ({ navigation,route }) => {
             .catch(function (error) {
                 console.log("error", error)
             })
-        } 
+        }
 
     useEffect(() => {
         GetGuests()
       
     }, []);
 
+    /////////////////>/navigation function////////////
+    const navfunc=(props)=>{
+      console.log('item data here',props._id)
+      if(route.params.navplace === 'CreateTrip')
+      {
+        dispatch(setNavPlace('GuestList'))
+        dispatch(setGuestDetails(props._id))
+        navigation.navigate('CreateTrip',{data:props,navplace:'GuestList'})
+      }
+     else{
+      navigation.navigate('GuestsDetail',{guest_id:props._id,navplace:'GuestDetail'})
+     }
+
+    }
     return (
 <SafeAreaView style={styles.container}>
     <ScrollView 
@@ -101,7 +87,7 @@ const GuestsList = ({ navigation,route }) => {
             <StatusBar backgroundColor={'black'} barStyle="light-content" />
             <CustomHeader
           headerlabel={'Orders'}
-          iconPress={() => { navigation.toggleDrawer() }}
+          iconPress={() => { navigation.goBack()}}
           icon={'chevron-back'}
           onpresseacrh={() => navigation.navigate('AddGuests')}
           searchicon={'add-sharp'}
@@ -136,19 +122,17 @@ const GuestsList = ({ navigation,route }) => {
                   />
                           <Ionicons name="search" color={Colors.drawertext} size={25} />
                 </View>
-            { Guestss === ''?null:
-Guestss.map((item, key) => (
-    <TouchableOpacity onPress={()=> route.params.navplace === 'CreateTrip'?
-    navigation.navigate('CreateTrip'):
-    navigation.navigate('GuestsDetail',{guest_id:item._id,navplace:'GuestDetail'})}>
+            { Guests === ''?null:
+Guests.map((item, key) => (
+    <TouchableOpacity onPress={()=> navfunc(item)}
+    activeOpacity={1}
+    >
     <GuestCards
-                                        // guestlogo={item.img}
-                                        // guestname={item.name}
-                                        // guestemail={item.email}
-                                        // guestgender={item.gender}
-                                        guestname={'Guest name here'}
-                                        guestemail={'Email here'}
-                                        guestgender={'Gender Here'}
+                                        guestlogo={BASE_URL+item.img}
+                                        guestname={item.name}
+                                        guestemail={item.email}
+                                        guestgender={item.gender}
+          
                                     />
                                     </TouchableOpacity>
 ))

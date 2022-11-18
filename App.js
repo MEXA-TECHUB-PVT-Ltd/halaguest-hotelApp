@@ -25,6 +25,9 @@ import CreateTrip from './src/screens/StackScreens/Trip/CreateTrip/CreateTrip';
 import TripRoute from './src/screens/StackScreens/Trip/TripRoute/TripRoute';
 import TripCompleted from './src/screens/StackScreens/Trip/TripRoute/TripCompleted';
 import Rattings from './src/screens/StackScreens/Rattings/Rattings';
+import FindingDriver from './src/screens/StackScreens/Trip/TripRoute/FindingDriver';
+import PickupLocation from './src/screens/StackScreens/Locations/PickupLocations/PickupLocations';
+
 
 const Stack = createNativeStackNavigator();
 function App() {
@@ -167,6 +170,20 @@ function App() {
             <Stack.Screen
             name="Rattings"
             component={Rattings}
+            options={{
+              headerShown: false,
+            }}
+          />
+       <Stack.Screen
+            name="FindingDriver"
+            component={FindingDriver}
+            options={{
+              headerShown: false,
+            }}
+          />
+                 <Stack.Screen
+            name="PickupLocation"
+            component={PickupLocation}
             options={{
               headerShown: false,
             }}

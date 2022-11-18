@@ -1,6 +1,6 @@
-  ////////////////APP STATES/////////////////////
+
+ ////////////////APP STATES/////////////////////
 export const SET_HOTEL_TYPE = 'SET_HOTEL_TYPE';
-export const SET_PHONE_NO = 'SET_PHONE_NO';
 
 ////////////////////Account Data Submition////////////////
 export const SET_HOTEL_SUBMIT_ID = 'SET_HOTEL_SUBMIT_ID';
@@ -11,8 +11,10 @@ export const SET_CAR_CONDITION = 'SET_CAR_CONDITION';
 export const SET_CAR_CONDITION_ID = 'SET_CAR_CONDITION_ID';
 export const SET_CAR_TYPE = 'SET_CAR_TYPE';
 export const SET_CAR_TYPE_ID = 'SET_CAR_TYPE_ID';
+export const SET_CAR_PRICE = 'SET_CAR_PRICE';
 export const SET_CAR_MAKE = 'SET_CAR_MAKE';
 export const SET_CAR_YEAR = 'SET_CAR_YEAR';
+export const SET_CAR_AC = 'SET_CAR_AC';
 
 //////////////////IMAGES/////////////////
 export const SET_USER_IMAGE= 'SET_USER_IMAGE';
@@ -22,9 +24,16 @@ export const EDIT_USER_IMAGE= 'EDIT_USER_IMAGE';
 export const SET_NAV_PLACE= 'SET_NAV_PLACE';
 
   ////////////////APP STATES/////////////////////
-
-
+     ////////////////APP LOGIN STATES/////////////////////
+     export const SET_LOGIN_USER = 'SET_LOGIN_USER';
+     export const SET_PHONE_NO = 'SET_PHONE_NO';
   ///////////////User Login Info///////////////
+  export const setLoginUser = login_user_id => dispatch => {
+    dispatch({
+        type: SET_LOGIN_USER,
+        payload: login_user_id,
+    });
+};
 export const setPhoneNumber = phone_no => dispatch => {
     dispatch({
         type: SET_PHONE_NO,
@@ -82,6 +91,12 @@ export const setCarTypeId = car_type_id => dispatch => {
         payload: car_type_id,
     });
 };
+export const setCarPrice = car_price=> dispatch => {
+    dispatch({
+        type: SET_CAR_PRICE,
+        payload: car_price,
+    });
+};
 export const setCarMake = car_make => dispatch => {
     dispatch({
         type: SET_CAR_MAKE,
@@ -94,7 +109,12 @@ export const setCarYear = car_year => dispatch => {
         payload: car_year,
     });
 };
-
+export const setCarAC = car_AC => dispatch => {
+    dispatch({
+        type: SET_CAR_AC,
+        payload: car_AC,
+    });
+};
 //////////////////////images Info//////////////////
 
 export const setUserImage = user_image => dispatch => {
@@ -117,5 +137,31 @@ export const setNavPlace = nav_place => dispatch => {
     dispatch({
         type: SET_NAV_PLACE,
         payload: nav_place,
+    });
+};
+
+
+/////////////////////////API CALLING//////////////////
+export const GET_ACCOUNT_DETAIL = 'GET_ACCOUNT_DETAIL';
+export const setGuestDetails = user_account_detail => dispatch => {
+    dispatch({
+        type: GET_ACCOUNT_DETAIL,
+        payload: user_account_detail,
+    });
+};
+
+/////////////////////////TRIP AMOUNT AND TOTAL AMOUNT//////////////////
+export const SET_TRIP_AMOUNT = 'SET_TRIP_AMOUNT';
+export const setTripAmount = trip_amount => dispatch => {
+    dispatch({
+        type: SET_TRIP_AMOUNT,
+        payload: trip_amount,
+    });
+};
+export const SET_TRIP_TOTAL_AMOUNT = 'SET_TRIP_TOTAL_AMOUNT';
+export const setTripTotalAmount = trip_total_amount => dispatch => {
+    dispatch({
+        type: SET_TRIP_TOTAL_AMOUNT,
+        payload: trip_total_amount,
     });
 };

@@ -4,24 +4,24 @@ import {
     Image, View, Text, TouchableOpacity, TextInput
 } from 'react-native';
 
+////////////paper papkage///////////////
+import {Snackbar} from 'react-native-paper';
+
 //////////////////////app components///////////////
 import CustomHeader from '../../../components/Header/CustomHeader';
 import CamerBottomSheet from '../../../components/CameraBottomSheet/CameraBottomSheet';
 import CustomButtonhere from '../../../components/Button/CustomButton';
 import HotelTypes from '../../../components/Dropdowns/HotelTypes';
-
-//////////////app pakages//////////////////
-import ImagePicker from 'react-native-image-crop-picker';
+import CustomModal from '../../../components/Modal/CustomModal';
 
 ////////////////////redux////////////
 import { useSelector, useDispatch } from 'react-redux';
-import { setName, setAge } from '../../../redux/actions';
+import { setNavPlace,setLoginUser } from '../../../redux/actions';
 
 ////////////////api////////////////
 import axios from 'axios';
 import { BASE_URL } from '../../../utills/ApiRootUrl';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import RNFetchBlob from 'rn-fetch-blob'
 
 /////////////////////height width pakage/////////////////////
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
@@ -36,118 +36,73 @@ import { appImages } from '../../../constant/images';
 
 
 const CreateAccount = ({ navigation,route }) => {
-console.log('previous data:', route.params)
-
+  
     ////////////prevous data States///////////////
     const [predata] = useState(route.params);
+
+    //////////////////redux states/////////////////
+    const { hoteltype,phone_no,user_image } = useSelector(state => state.userReducer);
+    const dispatch = useDispatch();
 
    //////////////link dropdown////////////////
    const refddRBSheet = useRef();
 
-    //camera and imagepicker
+    //camera and imagepicker/////////////////
   const refRBSheet = useRef();
 
-  ///////////picker state/////////
-  const [image, setImage] = useState('')
-
-  //////////////////////cameraimage//////////////////
-  const takePhotoFromCamera = () => {
-
-    ImagePicker.openCamera({
-      compressImageMaxWidth: 300,
-      compressImageMaxHeight: 300,
-      cropping: true,
-      compressImageQuality: 0.7
-    }).then(image => {
-      refRBSheet.current.close()
-      console.log(image);
-      setImage(image.path);
-      let newfile = {
-        uri: image.path,
-        type: image.mime,
-        name: image.path.substring(image.path.lastIndexOf('/') + 1)
-      }
-      Uploadpic(newfile)
-
-    });
-  }
-  ////////////////////library image//////////////////
-  const choosePhotoFromLibrary = () => {
-    ImagePicker.openPicker({
-      width: 300,
-      height: 300,
-      cropping: true,
-      compressImageQuality: 0.7
-    }).then(image => {
-      refRBSheet.current.close()
-      console.log(image);
-      setImage(image.path);
-      let newfile = {
-        uri: image.path,
-        type: image.mime,
-        name: image.path.substring(image.path.lastIndexOf('/') + 1)
-      }
-      Uploadpic(newfile)
-    });
-  }
-
-    //Modal States
+    ///////////////Modal States///////////////
     const [modalVisible, setModalVisible] = useState(false);
 
-    const { hoteltype,phone_no } = useSelector(state => state.userReducer);
-    const dispatch = useDispatch();
+  /////////TextInput References///////////
+  const ref_input2 = useRef();
+  const ref_input3 = useRef();
+  const ref_input4 = useRef();
+  const ref_input5 = useRef();
+  const ref_input6 = useRef();
+  const ref_input7 = useRef();
 
-             /////////TextInput References///////////
-             const ref_input2 = useRef();
-
-             const [selectedimage, setselectedimage] = useState(false);
-                   /////////////////image api calling///////////////
-      const Uploadpic =(props)=>{
-console.log("here url", BASE_URL + 'upload-image')
-        RNFetchBlob.fetch('POST',
-        BASE_URL + 'upload-image',
-        {
-          Authorization: "Bearer access-token",
-          otherHeader: "foo",
-          'Content-Type': 'multipart/form-data',
-        }, [
-        // part file from storage
-        {
-          name: 'image', filename: 'avatar-foo.jpg', type: 'image/png',
-          data: RNFetchBlob.wrap(props.uri)
-        }
-      ]).then((resp) => {
-        console.log('here Profile image:',resp.data)
-        setselectedimage(JSON.parse(resp.data))
-       // CreateUserProfile(resp.data)
-      }).catch((err) => {
-        console.log('here error:',err)
-      })
-  
-      }
+   /////////button states/////////////
+   const [loading, setloading] = useState(0);
+   const [disable, setdisable] = useState(0);
+   const [visible, setVisible] = useState(false);
+   const [snackbarValue, setsnackbarValue] = useState({value: '', color: ''});
+   const onDismissSnackBar = () => setVisible(false);
 
   ///////////////data states////////////////////
   const [name, setName] = React.useState();
   const [email, setEmail] = React.useState();
-  const [gender,  setGender] = React.useState();
   const [city,  setCity] = React.useState();
   const [state,  setState] = React.useState();
   const [zipcode,  setZipcode] = React.useState();
   const [country,  setCountry] = React.useState();
   const [street_address,  setStreet_address] = React.useState();
+  
+   ///////////email//////////////////
+ const handleValidEmail = (val) => {
+  let reg = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w\w+)+$/;
+  if (reg.test(val)) {
+      console.log('true')
+      return true;
+  }
+  else {
+      console.log('falsse')
+      return false;
+  }
+}
 
  //////////////////////Api Calling/////////////////
- const Createuser = async() => {
+ const CreateAcount = async() => {
   var user= await AsyncStorage.getItem('Userid')
   var date=new Date()
-  console.log("userid:",date,selectedimage)
+  console.log("userid:",date,user_image,user)
 
     axios({
-      method: 'POST',
-      url: BASE_URL + 'api/hotel/createHotel',
+      method: 'PUT',
+      url: BASE_URL + 'api/hotel/updateHotel',
       data: {
+        _id:user,
         hotel_name: hoteltype,
-        img: selectedimage,
+        img: user_image,
         email: email,
         city: city,
         state: state,
@@ -157,30 +112,59 @@ console.log("here url", BASE_URL + 'upload-image')
         name: name,
         phoneNo: phone_no,
         created_at:date,
-        status: 'block',
+        //status: 'block',
         device_token: '354ref' 
       },
     })
-      .then(function (response) {
-        console.log("response", JSON.stringify(response.data))
-        // if (response.data === "Email Already Exist") {
-        //   setloading(0);
-        //   setdisable(0);
-        //   alert("Email Already Exist,Enter other email")
-        // }
-        // else {
-        //   setloading(0);
-        //   setdisable(0);
-        //   navigation.navigate('Subscribe', response.data)
-        // }
-
-
+      .then(async function (response) {
+        console.log("Account data response", JSON.stringify(response.data))
+        setloading(0);
+        setdisable(0);
+        //await AsyncStorage.setItem('Userid',response.data._id);
+        setModalVisible(true)
       })
       .catch(function (error) {
         console.log("error", error)
       })
   }
-
+  //////////////////////// API forms validations////////////////////////
+  const AcountValidation = async () => {
+    // input validation
+    if (name == '') {
+      setsnackbarValue({value: 'Please Enter Comapany name', color: 'red'});
+      setVisible('true');
+    } else if (email == '') {
+      setsnackbarValue({value: 'Please Enter Email', color: 'red'});
+      setVisible('true');
+    } else if (!handleValidEmail(email)) {
+      setsnackbarValue({value: 'Incorrect Email', color: 'red'});
+      setVisible('true');
+    } else if (city == '') {
+      setsnackbarValue({value: 'Please Enter City', color: 'red'});
+      setVisible('true');
+    } 
+    else if (state == '') {
+      setsnackbarValue({value: 'Please Enter State', color: 'red'});
+      setVisible('true');
+    }
+    else if (zipcode == '') {
+      setsnackbarValue({value: 'Please Enter Zipcode', color: 'red'});
+      setVisible('true');
+    }
+    else if (country == '') {
+      setsnackbarValue({value: 'Please Enter Country', color: 'red'});
+      setVisible('true');
+    }
+    else if (street_address == '') {
+      setsnackbarValue({value: 'Please Enter Street Address', color: 'red'});
+      setVisible('true');
+    }
+    else {
+      setloading(1);
+      setdisable(1);
+      CreateAcount()
+    }
+  };
     useEffect(() => {
     }, []);
 
@@ -195,127 +179,144 @@ console.log("here url", BASE_URL + 'upload-image')
                 headerlabel={'Create Account'}
                 iconPress={() => { navigation.goBack() }}
                 icon={'chevron-back'}
-      
-            />  
-<TouchableOpacity onPress={()=> refRBSheet.current.open()}>
-<View style={styles.userimage}>
-{image != '' ?
+              />  
+     <TouchableOpacity onPress={() =>
+                             {refRBSheet.current.open(),
+                                dispatch(setNavPlace('Account_Detail'))
+                                }
+                 }>
+              <View style={styles.userimage}>
+                {user_image != '' ? (
                   <Image
-                    source={{ uri: image }}
+                    source={{uri: BASE_URL+user_image}}
                     style={styles.image}
-                    resizeMode='contain'
+                    resizeMode="contain"
                   />
-                :
-            <Image
-            source={appImages.User}
-            style={{ width: wp(12), height: hp(8),
-             }}
-             resizeMode='contain'
-          />
-              }
-          <Image
-            source={appImages.Camera}
-            style={{ width: wp(10), height: hp(5),position:"absolute",bottom:0,right:0
-             }}
-             resizeMode='contain'
-          />
-</View>
-</TouchableOpacity>
+                ) : (
+                  <Image
+                    source={appImages.User}
+                    style={{width: wp(12), height: hp(8)}}
+                    resizeMode="contain"
+                  />
+                )}
+
+                <Image
+                  source={appImages.Camera}
+                  style={{
+                    width: wp(10),
+                    height: hp(5),
+                    position: 'absolute',
+                    bottom: 0,
+                    right: 0,
+                  }}
+                  resizeMode="contain"
+                />
+              </View>
+            </TouchableOpacity>
 <View style={Inputstyles.inputview}>
-  <Text style={Inputstyles.inputtoptext}>Name</Text>
-  <TouchableOpacity onPress={()=> refddRBSheet.current.open()} >
-  <View style={Inputstyles.action}>
-            <TextInput
-            value={hoteltype}
-              //placeholder="Username Here"
-              onChangeText={setName}
-              returnKeyType={"next"}
-              onSubmitEditing={() => { ref_input2.current.focus() }}
-              blurOnSubmit={false}
-              autoFocus={true}
-              placeholderTextColor={Colors.inputtextcolor}
-              autoCapitalize="none"
-              style={Inputstyles.input}
-              editable={false}
-            />
-          </View>
-  </TouchableOpacity>
-          <Text style={Inputstyles.inputtoptext}>Email</Text>
-          <View style={Inputstyles.action}>
-            <TextInput
+              <Text style={Inputstyles.inputtoptext}>Hotel name</Text>
+              <TouchableOpacity onPress={()=>refddRBSheet.current.open()}>
+              <View style={Inputstyles.action}>
+                  <TextInput
+                  value={hoteltype}
+                    returnKeyType={'next'}
+                    onSubmitEditing={() => {
+                      ref_input2.current.focus();
+                    }}
+                    blurOnSubmit={false}
+                    autoFocus={true}
+                    placeholderTextColor={Colors.inputtextcolor}
+                    style={Inputstyles.input}
+                    editable={false}
+                  />
+                </View>
+    
+              </TouchableOpacity>
+           
+              <Text style={Inputstyles.inputtoptext}>Email</Text>
+              <View style={Inputstyles.action}>
+                <TextInput
                   ref={ref_input2}
-                  //value={email}
-              //placeholder="Example@gmail.com"
-              onChangeText={setEmail}
-              placeholderTextColor={Colors.inputtextcolor}
-              autoCapitalize="none"
-              style={Inputstyles.input}
-            />
-          </View>
-          <Text style={Inputstyles.inputtoptext}>City</Text>
-          <View style={Inputstyles.action}>
-            <TextInput
-                  ref={ref_input2}
-                 // value={email}
-              //placeholder="Example@gmail.com"
-              onChangeText={setCity}
-              placeholderTextColor={Colors.inputtextcolor}
-              autoCapitalize="none"
-              style={Inputstyles.input}
-            />
-          </View>
-          <Text style={Inputstyles.inputtoptext}>State</Text>
-          <View style={Inputstyles.action}>
-            <TextInput
-                  ref={ref_input2}
-                 // value={email}
-              //placeholder="Example@gmail.com"
-              onChangeText={setState}
-              placeholderTextColor={Colors.inputtextcolor}
-              autoCapitalize="none"
-              style={Inputstyles.input}
-            />
-          </View>
-          <Text style={Inputstyles.inputtoptext}>Zip_Code</Text>
-          <View style={Inputstyles.action}>
-            
-            <TextInput
-                  ref={ref_input2}
-                  //value={email}
-              //placeholder="Example@gmail.com"
-              onChangeText={setZipcode}
-              placeholderTextColor={Colors.inputtextcolor}
-              autoCapitalize="none"
-              style={Inputstyles.input}
-            />
-          </View>
-          <Text style={Inputstyles.inputtoptext}>Country</Text>
-          <View style={Inputstyles.action}>
-            
-            <TextInput
-                  ref={ref_input2}
-                  //value={email}
-              //placeholder="Example@gmail.com"
-              onChangeText={setCountry}
-              placeholderTextColor={Colors.inputtextcolor}
-              autoCapitalize="none"
-              style={Inputstyles.input}
-            />
-          </View>
-          <Text style={Inputstyles.inputtoptext}>Street Address</Text>
-          <View style={Inputstyles.action}>
-            
-            <TextInput
-                  ref={ref_input2}
-                  //value={email}
-              //placeholder="Example@gmail.com"
-              onChangeText={setEmail}
-              placeholderTextColor={Colors.inputtextcolor}
-              autoCapitalize="none"
-              style={Inputstyles.input}
-            />
-          </View>
-        </View>
+                  onChangeText={setEmail}
+                  returnKeyType={'next'}
+                  onSubmitEditing={() => {
+                    ref_input3.current.focus();
+                  }}
+                  blurOnSubmit={false}
+                  placeholderTextColor={Colors.inputtextcolor}
+                  autoCapitalize="none"
+                  keyboardType='email-address'
+                  style={Inputstyles.input}
+                />
+              </View>
+
+              <Text style={Inputstyles.inputtoptext}>City</Text>
+              <View style={Inputstyles.action}>
+                <TextInput
+                  ref={ref_input3}
+                  onChangeText={setCity}
+                  returnKeyType={'next'}
+                  onSubmitEditing={() => {
+                    ref_input4.current.focus();
+                  }}
+                  blurOnSubmit={false}
+                  placeholderTextColor={Colors.inputtextcolor}
+                  style={Inputstyles.input}
+                />
+              </View>
+              <Text style={Inputstyles.inputtoptext}>State</Text>
+              <View style={Inputstyles.action}>
+                <TextInput
+                  ref={ref_input4}
+                  onChangeText={setState}
+                  returnKeyType={'next'}
+                  onSubmitEditing={() => {
+                    ref_input5.current.focus();
+                  }}
+                  blurOnSubmit={false}
+                  placeholderTextColor={Colors.inputtextcolor}
+                  style={Inputstyles.input}
+                />
+              </View>
+              <Text style={Inputstyles.inputtoptext}>Zip_Code</Text>
+              <View style={Inputstyles.action}>
+                <TextInput
+                  ref={ref_input5}
+                  onChangeText={setZipcode}
+                  returnKeyType={'next'}
+                  onSubmitEditing={() => {
+                    ref_input6.current.focus();
+                  }}
+                  blurOnSubmit={false}
+                  placeholderTextColor={Colors.inputtextcolor}
+                  style={Inputstyles.input}
+                />
+              </View>
+              <Text style={Inputstyles.inputtoptext}>Country</Text>
+              <View style={Inputstyles.action}>
+                <TextInput
+                  ref={ref_input6}
+                  onChangeText={setCountry}
+                  returnKeyType={'next'}
+                  onSubmitEditing={() => {
+                    ref_input7.current.focus();
+                  }}
+                  blurOnSubmit={false}
+                  placeholderTextColor={Colors.inputtextcolor}
+                  style={Inputstyles.input}
+                />
+              </View>
+              <Text style={Inputstyles.inputtoptext}>Street Address</Text>
+              <View style={Inputstyles.action}>
+                <TextInput
+                  ref={ref_input7}
+                  onChangeText={setStreet_address}
+                  placeholderTextColor={Colors.inputtextcolor}
+                  style={Inputstyles.input}
+                />
+              </View>
+
+            </View>
         
         <View style={{ marginBottom: hp(2), 
             marginTop: hp(12) }}>
@@ -323,8 +324,10 @@ console.log("here url", BASE_URL + 'upload-image')
               title={'NEXT'}
               widthset={'78%'}
               topDistance={0}
+              loading={loading}
+              disable={disable}
               onPress={() => 
-                Createuser()
+                AcountValidation()
                // navigation.navigate('Drawerroute')
               }
             />
@@ -334,14 +337,33 @@ console.log("here url", BASE_URL + 'upload-image')
         refRBSheet={refRBSheet}
         onClose={() => refRBSheet.current.close()}
         title={'From Gallery'}
-        takePhotoFromCamera={takePhotoFromCamera}
-        choosePhotoFromLibrary={choosePhotoFromLibrary}
+    
       />
+                      <Snackbar
+          duration={400}
+          visible={visible}
+          onDismiss={onDismissSnackBar}
+          style={{
+            backgroundColor: snackbarValue.color,
+            marginBottom:'20%',
+            zIndex: 999,
+          }}>
+          {snackbarValue.value}
+        </Snackbar>
               <HotelTypes
           refRBSheet={refddRBSheet}
           onClose={() => refddRBSheet.current.close()}
           title={'From Gallery'}
         />
+                  <CustomModal 
+                modalVisible={modalVisible}
+                CloseModal={() => setModalVisible(false)}
+                Icon={appImages.CheckCircle}
+                text={'Account Created Successfully'}
+                leftbuttontext={'CANCLE'}
+                rightbuttontext={'OK'}
+ onPress={()=> {setModalVisible(false),navigation.navigate('BottomTab')}}
+                /> 
     </SafeAreaView>
 </ScrollView>
     )

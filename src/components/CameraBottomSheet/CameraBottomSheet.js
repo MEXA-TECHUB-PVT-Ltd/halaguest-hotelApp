@@ -97,11 +97,15 @@ const CamerBottomSheet = (props) => {
     )
       .then(resp => {
         console.log('here Profile image:', resp.data);
-        if(nav_place === 'AddGuests')
+        if(nav_place === 'Account_Detail')
         {
           dispatch(setUserImage(JSON.parse(resp.data)))
         }
-        if(nav_place === 'EditGuests')
+       else if(nav_place === 'AddGuests')
+        {
+          dispatch(setUserImage(JSON.parse(resp.data)))
+        }
+       else if(nav_place === 'EditGuests')
         {
           dispatch(editUserImage(JSON.parse(resp.data)))
         }

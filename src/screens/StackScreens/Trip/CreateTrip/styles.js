@@ -100,5 +100,12 @@ marginTop:hp(3)
     justifyContent:'center',
     marginBottom:'4%'
     },
+    placeholdertext:
+    {
+  
+        color:'#2E383F',
+        fontFamily: fontFamily.Poppins_Regular,
+    fontSize: hp(2),
+    },
 });
 export default styles;

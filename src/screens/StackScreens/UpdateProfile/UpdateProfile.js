@@ -47,9 +47,6 @@ console.log('previous data:', route.params)
     //camera and imagepicker
   const refRBSheet = useRef();
 
-  ///////////picker state/////////
-  const [image, setImage] = useState('')
-
   //////////////////////cameraimage//////////////////
   const takePhotoFromCamera = () => {
 
@@ -128,60 +125,86 @@ console.log("here url", BASE_URL + 'upload-image')
 
   ///////////////data states////////////////////
   const [name, setName] = React.useState();
+  const [image, setImage] = React.useState();
   const [email, setEmail] = React.useState();
-  const [gender,  setGender] = React.useState();
   const [city,  setCity] = React.useState();
   const [state,  setState] = React.useState();
   const [zipcode,  setZipcode] = React.useState();
   const [country,  setCountry] = React.useState();
   const [street_address,  setStreet_address] = React.useState();
 
- //////////////////////Api Calling/////////////////
- const Createuser = async() => {
-  var user= await AsyncStorage.getItem('Userid')
-  var date=new Date()
-  console.log("userid:",date,selectedimage)
+  const UpdateAcount = async() => {
+    var user= await AsyncStorage.getItem('Userid')
+    var date=new Date()
+    console.log("userid:",date,selectedimage,user)
+  
+      axios({
+        method: 'PUT',
+        url: BASE_URL + 'api/hotel/updateHotel',
+        data: {
+          _id:user,
+          hotel_name: hoteltype,
+          img: selectedimage,
+          email: email,
+          city: city,
+          state: state,
+          zip_code: zipcode,
+          country: country,
+          street_address: street_address,
+          name: name,
+          phoneNo: phone_no,
+          created_at:date,
+          //status: 'block',
+          device_token: '354ref' 
+        },
+      })
+        .then(async function (response) {
+          console.log("response", JSON.stringify(response.data))
+          //dispatch(setLoginUser(response.data.data._id))
+          await AsyncStorage.setItem('Userid',response.data._id);
+          navigation.navigate('BottomTab')
+          // if (response.data === "Email Already Exist") {
+          //   setloading(0);
+          //   setdisable(0);
+          //   alert("Email Already Exist,Enter other email")
+          // }
+          // else {
+          //   setloading(0);
+          //   setdisable(0);
+          //   navigation.navigate('Subscribe', response.data)
+          // }
+  
+  
+        })
+        .catch(function (error) {
+          console.log("error", error)
+        })
+    }
+  const GetAcountDetail=async() => {
+    var user= await AsyncStorage.getItem('Userid')
+    console.log("order request function",user)
 
-    axios({
-      method: 'POST',
-      url: BASE_URL + 'api/hotel/createHotel',
-      data: {
-        hotel_name: hoteltype,
-        img: selectedimage,
-        email: email,
-        city: city,
-        state: state,
-        zip_code: zipcode,
-        country: country,
-        street_address: street_address,
-        name: name,
-        phoneNo: phone_no,
-        created_at:date,
-        status: 'block',
-        device_token: '354ref' 
-      },
+    await axios({
+      method: 'GET',
+      url: BASE_URL+'api/hotel/specificHotel/'+user,
     })
-      .then(function (response) {
-        console.log("response", JSON.stringify(response.data))
-        // if (response.data === "Email Already Exist") {
-        //   setloading(0);
-        //   setdisable(0);
-        //   alert("Email Already Exist,Enter other email")
-        // }
-        // else {
-        //   setloading(0);
-        //   setdisable(0);
-        //   navigation.navigate('Subscribe', response.data)
-        // }
-
-
-      })
-      .catch(function (error) {
-        console.log("error", error)
-      })
-  }
-
+    .then(function (response) {
+      console.log("response", JSON.stringify(response.data))
+      setImage(response.data[0].img)
+      setName(response.data[0].hotel_name)
+      setEmail(response.data[0].email)
+      setCity(response.data[0].city)
+      setCountry(response.data[0].country)
+      setState(response.data[0].state)
+      setZipcode(response.data[0].zip_code)
+      setStreet_address(response.data[0].street_address)
+    })
+    .catch(function (error) {
+      console.log("error", error)
+    })
+    }
     useEffect(() => {
+      GetAcountDetail()
     }, []);
 
     return (
@@ -244,7 +267,7 @@ console.log("here url", BASE_URL + 'upload-image')
           <View style={Inputstyles.action}>
             <TextInput
                   ref={ref_input2}
-                  //value={email}
+                  value={email}
               //placeholder="Example@gmail.com"
               onChangeText={setEmail}
               placeholderTextColor={Colors.inputtextcolor}
@@ -256,7 +279,7 @@ console.log("here url", BASE_URL + 'upload-image')
           <View style={Inputstyles.action}>
             <TextInput
                   ref={ref_input2}
-                 // value={email}
+                 value={city}
               //placeholder="Example@gmail.com"
               onChangeText={setCity}
               placeholderTextColor={Colors.inputtextcolor}
@@ -268,7 +291,7 @@ console.log("here url", BASE_URL + 'upload-image')
           <View style={Inputstyles.action}>
             <TextInput
                   ref={ref_input2}
-                 // value={email}
+                 value={state}
               //placeholder="Example@gmail.com"
               onChangeText={setState}
               placeholderTextColor={Colors.inputtextcolor}
@@ -281,7 +304,7 @@ console.log("here url", BASE_URL + 'upload-image')
             
             <TextInput
                   ref={ref_input2}
-                  //value={email}
+                  value={zipcode}
               //placeholder="Example@gmail.com"
               onChangeText={setZipcode}
               placeholderTextColor={Colors.inputtextcolor}
@@ -294,7 +317,7 @@ console.log("here url", BASE_URL + 'upload-image')
             
             <TextInput
                   ref={ref_input2}
-                  //value={email}
+                value={country}
               //placeholder="Example@gmail.com"
               onChangeText={setCountry}
               placeholderTextColor={Colors.inputtextcolor}
@@ -307,9 +330,9 @@ console.log("here url", BASE_URL + 'upload-image')
             
             <TextInput
                   ref={ref_input2}
-                  //value={email}
+                  value={street_address}
               //placeholder="Example@gmail.com"
-              onChangeText={setEmail}
+              onChangeText={setStreet_address}
               placeholderTextColor={Colors.inputtextcolor}
               autoCapitalize="none"
               style={Inputstyles.input}
@@ -324,7 +347,7 @@ console.log("here url", BASE_URL + 'upload-image')
               widthset={'78%'}
               topDistance={0}
               onPress={() => 
-                Createuser()
+                UpdateAcount()
                // navigation.navigate('Drawerroute')
               }
             />
