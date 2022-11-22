@@ -26,5 +26,12 @@ const appImages = {
   //////////////////BottomTab images///////////////
   Trips: require(IMAGES_DIR + 'trips.png'),
   Transaction: require(IMAGES_DIR + 'transaction.png'),
+
+  
+  //////////////////TrackLocation images///////////////
+  icCurLoc: require(IMAGES_DIR + 'Oval.png'),
+  icGreenMarker: require(IMAGES_DIR + 'greenMarker.png'),
+  greenIndicator: require(IMAGES_DIR + 'greenIndicator.png'),
+  icBike: require(IMAGES_DIR + 'bike.png'),
 };
 export {appImages};

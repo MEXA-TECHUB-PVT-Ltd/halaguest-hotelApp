@@ -292,8 +292,8 @@ disabled={disabletimer}
             topDistance={0}
             //onPress={() => verifyno()}
             onPress={()=> 
-              confirmCode()
-                //CheckLogin() 
+              //confirmCode()
+                CheckLogin() 
                 }
           /></View>
    <CustomModal 

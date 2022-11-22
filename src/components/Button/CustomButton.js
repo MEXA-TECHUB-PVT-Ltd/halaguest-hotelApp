@@ -30,6 +30,7 @@ const CustomButtonhere = ({
     backgroundColor:iscolor==='login'?'white':Colors.Appthemecolor}]}
   labelStyle={[styles.label,{color:iscolor==='login'?Colors.Appthemecolor:'white',
   backgroundColor:iscolor==='login'?'white':Colors.Appthemecolor,
+  width:wp(widthset)
 }]}
   onPress={onPress}
   disabled={disable}

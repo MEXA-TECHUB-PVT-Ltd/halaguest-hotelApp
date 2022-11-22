@@ -22,7 +22,7 @@ const Inputstyles = StyleSheet.create({
   input:
   {
     //backgroundColor: Colors.appinputscolor,
-     width: '88%', 
+     width:wp(78), 
      alignSelf: 'center', 
      color: 'black' ,
     borderRadius: 40,

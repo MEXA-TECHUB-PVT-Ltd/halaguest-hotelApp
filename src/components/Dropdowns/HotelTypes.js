@@ -25,24 +25,18 @@ const HotelTypes = (props) => {
     const { HotelTypes} = useSelector(state => state.userReducer);
     const dispatch = useDispatch();
 
-   //////////////HotelTypes dropdown////////////////
-   const reflinkddRBSheet = useRef();
-
   //////////dropdownlink data/////////////
   const [dddata, setdddata] = useState()
-  const [ddpickvalue, setddpickvalue] = useState()
 
   ///////////////HotelTypes function///////////////
     const GetHotelTypes =async () => {
-        console.log('here:',BASE_URL+'api/hotelType/allhotelTypes')
         axios({
           method: 'GET',
           url: BASE_URL+'api/hotelType/allhotelTypes',
         })
           .then(function (response) {
-            console.log("response", JSON.stringify(response.data))
+            // console.log("response", JSON.stringify(response.data))
             setdddata(response.data)
-            console.log('flatlist data:', dddata)
           })
           .catch(function (error) {
             console.log("error", error)
@@ -60,8 +54,6 @@ const HotelTypes = (props) => {
         openDuration={50}
         closeDuration={50}
         animationType="fade"
-        
-        //height={500}
         customStyles={{
           wrapper: {
             backgroundColor: 'rgba(52, 52, 52, 0.5)',
@@ -91,18 +83,12 @@ const HotelTypes = (props) => {
           renderItem={({ item, index, separators }) => (
             <TouchableOpacity
             onPress={() =>
-              {setddpickvalue(item.name),
+              {
                 dispatch(setHotelType(item.name)),
                 props.refRBSheet.current.close()
-                //reflinkddRBSheet.current.open()
               }}
              >
             <View style={styles.card}>
-            {/* <Image
-                 source={{uri:BASE_URL+item.icon}}
-                    style={Inputstyles.inputicons}
-                    resizeMode='contain'
-                /> */}
                 <Text style={styles.cardtext}>
                   {item.name}
                 </Text>

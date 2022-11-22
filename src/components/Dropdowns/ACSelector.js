@@ -26,7 +26,7 @@ const ACType = [
   ];
 
 const CarACSelector = (props) => {
-    console.log('here:',props)
+
     /////////////redux states///////
     const { condition} = useSelector(state => state.userReducer);
     const dispatch = useDispatch();

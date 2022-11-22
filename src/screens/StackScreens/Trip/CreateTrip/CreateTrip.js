@@ -27,10 +27,13 @@ import CustomButtonhere from '../../../../components/Button/CustomButton';
 import CustomHeader from '../../../../components/Header/CustomHeader';
 import SettingsMenu from '../../../../components/SettingsView/SettingsMenu';
 import GuestCards from '../../../../components/CustomCards/GuestCards/GuestCards';
+import CustomModal from '../../../../components/Modal/CustomModal';
+
+///////////////custom Dropdowns////////////////
 import CarType from '../../../../components/Dropdowns/CarType';
 import CarCondition from '../../../../components/Dropdowns/CarCondition';
 import CarACSelector from '../../../../components/Dropdowns/ACSelector';
-import CustomModal from '../../../../components/Modal/CustomModal';
+
 
 ////////////////////redux////////////
 import {useSelector, useDispatch} from 'react-redux';
@@ -54,6 +57,9 @@ import Inputstyles from '../../../../styles/GlobalStyles/Inputstyles';
 /////////////////app images///////////
 import { appImages } from '../../../../constant/images';
 
+//////////////////distance package////////////
+import { getDistance } from 'geolib';
+
 const CreateTrip = ({navigation,route}) => {
 
     ////////////isfocused//////////
@@ -63,7 +69,10 @@ const CreateTrip = ({navigation,route}) => {
 
   /////////////////////////redux///////////////////
   const {phone_no,nav_place,user_account_detail,condition,
-     car_type,car_AC,car_price,trip_amount,trip_total_amount,car_type_id,condition_id} =
+     car_type,car_AC,car_price,trip_amount,trip_total_amount,car_type_id,condition_id,
+ pickup_location_lng, pickup_location_lat,pickup_location_address,
+ dropoff_location_lng, dropoff_location_lat,dropoff_location_address
+    } =
     useSelector(state => state.userReducer);
   const dispatch = useDispatch();
 
@@ -71,12 +80,6 @@ const CreateTrip = ({navigation,route}) => {
  const refCarConditionddRBSheet = useRef();
  const refCarTypeddRBSheet = useRef();
  const refCarACddRBSheet = useRef();
-
-  /////////////////nav state////////////
-  const [nav, setnav] = useState(false);
-
-  //////////////link dropdown////////////////
-  const refddRBSheet = useRef();
   
   //camera and imagepicker
   const refRBSheet = useRef();
@@ -101,8 +104,6 @@ const CreateTrip = ({navigation,route}) => {
   ///////////////API data states////////////////////
   //////////////////Account////////////////
   const [drivernotes, setDriverNotes] = useState('');
-  const [pickuploc, setpickuploc] = useState('');
-  const [dropoffloc, setdropoffloc] = useState('');
 
   //////////////////////Api Calling/////////////////
   const CreateTrip = async () => {
@@ -113,12 +114,12 @@ const CreateTrip = ({navigation,route}) => {
       url: BASE_URL + 'api/Order/createOrder',
       data: {
         guest_id: user_account_detail,
-        'pickup_location': 'Rawalpindi, Pakistan',
-        'pickup_log': '73.038080',
-        'pickup_lat': '33.601920',
-        'dropoff_location': 'Islamabad, Pakistan',
-        'dropoff_log': '73.0479',
-        'dropoff_lat': '33.6844',
+      pickup_location:pickup_location_address,
+        pickup_log: pickup_location_lng,
+        pickup_lat: pickup_location_lat,
+        dropoff_location: dropoff_location_address,
+        dropoff_log: dropoff_location_lng,
+        dropoff_lat:dropoff_location_lat,
         condition_id: condition_id,
         car_type_id: car_type_id,
         ac:car_AC,
@@ -149,10 +150,10 @@ const CreateTrip = ({navigation,route}) => {
   //////////////////////// API forms validations////////////////////////
   const AcountValidation = async () => {
     // input validation
-    if (pickuploc == '') {
+    if (pickup_location_address == '') {
       setsnackbarValue({value: 'Please Enter PickUp Location', color: 'red'});
       setVisible('true');
-    } else if (dropoffloc == '') {
+    } else if (dropoff_location_address == '') {
       setsnackbarValue({value: 'Please Enter Dropoff Location', color: 'red'});
       setVisible('true');
     } else if (condition == '') {
@@ -215,9 +216,21 @@ const CreateTrip = ({navigation,route}) => {
         GetGuestsDetail()
         GetComission()
         GetRateperkm()
+        calculateDistance()
     }
   
     }, [isfocussed]);
+//////////////////////distance state////////////
+const[distance,setdistance]=useState()
+    ////////////////////calculate distance//////////////
+    const calculateDistance = () => {
+      var dis = getDistance(
+        {latitude: pickup_location_lat, longitude: pickup_location_lng},
+        {latitude: dropoff_location_lat, longitude: dropoff_location_lng},
+      );
+   console.log('distance here',dis)
+   setdistance(dis)
+    };
 
       /////////////////////////Get Comission Data and state////////////////////
   const [comission, setComission] = useState('');
@@ -319,16 +332,7 @@ const showModeTime = (currentMode) => {
 const showTimepicker = () => {
   showModeTime('time');
 };
-var amnt=''
-var totlamnt=''
-/////////////////getamount//////////////
-const amount =()=>{
-amnt=(JSON.parse(rate_per_km) *4)+JSON.parse(car_price)
-totlamnt=(JSON.parse(amnt)/100)*JSON.parse(comission)
-console.log('amount here:',totlamnt)
-  // dispatch(setTripAmount((JSON.parse(rate_per_km) *2)+JSON.parse(car_price))),
-  // dispatch(setTripTotalAmount((JSON.parse(trip_amount)/100)*JSON.parse(comission)))
-}
+
 
   return (
     <ScrollView
@@ -388,46 +392,40 @@ console.log('amount here:',totlamnt)
 label={'Add Guest'}
 labelPress={()=>
 {
-navigation.navigate('GuestsList',{navplace:'CreateTrip'}),
-setnav(true)
+navigation.navigate('GuestsList',{navplace:'CreateTrip'})
 }}
 />
 }
               <Text style={Inputstyles.inputtoptext}>Enter Location</Text>
-              <TouchableOpacity onPress={()=>navigation.navigate('PickupLocation')}>
+              <TouchableOpacity onPress={()=>navigation.navigate('Location',{navplace:'PickupLocation'})}>
               <View style={Inputstyles.action}>
                 <Ionicons name="location" color={Colors.drawertext} size={25} />
                   <TextInput
-                    onChangeText={setpickuploc}
+                  value={pickup_location_address}
+                    // onChangeText={setpickuploc}
                     placeholder={'Pickup location'}
-                    returnKeyType={'next'}
-                    onSubmitEditing={() => {
-                      ref_input2.current.focus();
-                    }}
-                    blurOnSubmit={false}
-                    autoFocus={true}
                     placeholderTextColor={Colors.inputtextcolor}
-                    style={Inputstyles.input}
+                    style={[Inputstyles.input,{width:wp(75)}]}
+                    multiline={true}
+                    numberOfLines={3}
                     editable={false}
                   />
                 </View>
               </TouchableOpacity>
-        
+              <TouchableOpacity onPress={()=>navigation.navigate('Location',{navplace:'DropoffLocation'})}>
                 <View style={Inputstyles.action}>
                 <Ionicons name="location" color={Colors.drawertext} size={25} />
                   <TextInput
-                    onChangeText={setdropoffloc}
+                  value={dropoff_location_address}
                     placeholder={'Drop-off location'}
-                    returnKeyType={'next'}
-                    onSubmitEditing={() => {
-                      ref_input2.current.focus();
-                    }}
-                    blurOnSubmit={false}
-                    autoFocus={true}
                     placeholderTextColor={Colors.inputtextcolor}
-                    style={Inputstyles.input}
+                    style={[Inputstyles.input,{width:wp(75)}]}
+                    multiline={true}
+                    numberOfLines={3}
+                    editable={false}
                   />
                 </View>
+                </TouchableOpacity>
               <Text style={Inputstyles.inputtoptext}>Select Car</Text>      
               <TouchableOpacity
                 onPress={() => refCarConditionddRBSheet.current.open()}>
@@ -436,7 +434,7 @@ setnav(true)
                   value={condition}
                   placeholderTextColor={'#212121'}
                   placeholderStyle={styles.placeholdertext}
-                  style={Inputstyles.input}
+                  style={[Inputstyles.input,{width:wp(75)}]}
                   placeholder={'Car Condition'}
                   editable={false}
                 />
@@ -447,13 +445,13 @@ setnav(true)
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {refCarTypeddRBSheet.current.open(),
-                  dispatch(setTripAmount((rate_per_km *2)+car_price))
+                  dispatch(setTripAmount((rate_per_km *distance)+car_price))
                   }}>
               <View style={Inputstyles.action}>
                 <TextInput
                   value={car_type}
                   placeholderTextColor={'#212121'}
-                  style={Inputstyles.input}
+                  style={[Inputstyles.input,{width:wp(75)}]}
                   placeholder={'Car Type'}
                   //onSubmitEditing={()=>amount()}
                   editable={false}
@@ -472,7 +470,7 @@ setnav(true)
                 <TextInput
                   value={car_AC}
                   placeholderTextColor={'#212121'}
-                  style={Inputstyles.input}
+                  style={[Inputstyles.input,{width:wp(75)}]}
                   placeholder={'AC'}
                   editable={false}
                 />
@@ -544,7 +542,7 @@ setnav(true)
    <View style={styles.detailview}>
     <Text style={styles.detailtextleft}>Total Amount</Text>
     <Text style={styles.detailtextright}>
-   {trip_total_amount} $</Text>
+   {trip_amount+trip_total_amount} $</Text>
    </View>
             <View style={{marginBottom: hp(2), marginTop: hp(12)}}>
               <CustomButtonhere

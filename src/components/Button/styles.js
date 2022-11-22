@@ -39,7 +39,8 @@ label:
     fontSize: hp(2.2) ,
     backgroundColor:Colors.Appthemecolor,
     fontFamily:fontFamily.Poppins_Regular,
-    alignSelf:'center'
+    alignSelf:'center',
+    width:wp(70)
 },
 
   });
