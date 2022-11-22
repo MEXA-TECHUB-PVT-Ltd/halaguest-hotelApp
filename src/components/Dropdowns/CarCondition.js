@@ -19,26 +19,24 @@ import { BASE_URL } from '../../utills/ApiRootUrl';
   import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CarCondition = (props) => {
-    console.log('here:',props)
+
     /////////////redux states///////
     const { condition} = useSelector(state => state.userReducer);
     const dispatch = useDispatch();
 
   //////////dropdownlink data/////////////
   const [dddata, setdddata] = useState()
-  const [ddpickvalue, setddpickvalue] = useState()
 
   ///////////////CarCondition function///////////////
     const GetCarCondition =async () => {
-        console.log('here:')
+
         axios({
           method: 'GET',
           url: BASE_URL+'api/condition/allConditions',
         })
           .then(function (response) {
-            console.log("response", JSON.stringify(response.data))
+            // console.log("response", JSON.stringify(response.data))
             setdddata(response.data)
-            console.log('flatlist data:', dddata)
           })
           .catch(function (error) {
             console.log("error", error)
@@ -56,8 +54,6 @@ const CarCondition = (props) => {
         openDuration={50}
         closeDuration={50}
         animationType="fade"
-        
-        //height={500}
         customStyles={{
           wrapper: {
             backgroundColor: 'rgba(52, 52, 52, 0.5)',
@@ -68,7 +64,7 @@ const CarCondition = (props) => {
           container: {
             borderTopLeftRadius:wp(10),
             borderTopRightRadius:wp(10),
-             // height:hp(95)
+             height:hp(90),
              maxHeight:hp(90),
           }
         }}
@@ -88,18 +84,13 @@ const CarCondition = (props) => {
           renderItem={({ item, index, separators }) => (
             <TouchableOpacity
             onPress={() =>
-              {setddpickvalue(item.icon),
+              {
                 dispatch(setCarCondition(item.name)),
                 dispatch(setCarConditionId(item._id)),
                 props.refRBSheet.current.close()
               }}
              >
             <View style={styles.card}>
-            {/* <Image
-                 source={{uri:BASE_URL+item.icon}}
-                    style={Inputstyles.inputicons}
-                    resizeMode='contain'
-                /> */}
                 <Text style={styles.cardtext}>
                   {item.name}
                 </Text>

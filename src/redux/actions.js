@@ -165,3 +165,50 @@ export const setTripTotalAmount = trip_total_amount => dispatch => {
         payload: trip_total_amount,
     });
 };
+
+  ////////////////APP STATES/////////////////////
+     ////////////////APP LOGIN STATES/////////////////////
+     export const SET_PICKUP_LOCATION_LAT = 'SET_PICKUP_LOCATION_LAT';
+     export const SET_PICKUP_LOCATION_LNG = 'SET_PICKUP_LOCATION_LNG';
+     export const SET_PICKUP_LOCATION_ADDRESS = 'SET_PICKUP_LOCATION_ADDRESS';
+     export const SET_DROPOFF_LOCATION_LAT = 'SET_DROPOFF_LOCATION_LAT';
+     export const SET_DROPOFF_LOCATION_LNG = 'SET_DROPOFF_LOCATION_LNG';
+     export const SET_DROPOFF_LOCATION_ADDRESS = 'SET_DROPOFF_LOCATION__ADDRESS';
+  ///////////////User Login Info///////////////
+  export const setPickupLocationLat = pickup_location_lat => dispatch => {
+    dispatch({
+        type: SET_PICKUP_LOCATION_LAT,
+        payload: pickup_location_lat,
+    });
+};
+export const setPickupLocationLng = pickup_location_lng => dispatch => {
+    dispatch({
+        type: SET_PICKUP_LOCATION_LNG,
+        payload: pickup_location_lng,
+    });
+};
+export const setPickupLocationAddress = pickup_location_address => dispatch => {
+    dispatch({
+        type: SET_PICKUP_LOCATION_ADDRESS,
+        payload: pickup_location_address,
+    });
+};
+export const setDropoffLocationLat = dropoff_location_lat => dispatch => {
+    dispatch({
+        type: SET_DROPOFF_LOCATION_LAT,
+        payload: dropoff_location_lat,
+    });
+};
+export const setDropoffLocationLng = dropoff_location_lng => dispatch => {
+    dispatch({
+        type: SET_DROPOFF_LOCATION_LNG,
+        payload: dropoff_location_lng,
+    });
+};
+
+export const setDropoffLocationAddress = dropoff_location_address => dispatch => {
+    dispatch({
+        type: SET_DROPOFF_LOCATION_ADDRESS,
+        payload: dropoff_location_address,
+    });
+};

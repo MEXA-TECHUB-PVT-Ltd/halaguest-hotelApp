@@ -13,14 +13,14 @@ import {
     Avatar,
 } from 'react-native-paper';
 
-import { BASE_URL } from '../../utills/ApiRootUrl';
+import { BASE_URL } from '../../../utills/ApiRootUrl';
 
 const GuestCards = (props) => {
     return (
         <View style={styles.card}>
 
                     <Avatar.Image
-                    source={{uri:props.guestlogo}}
+                    source={{uri:BASE_URL+props.guestlogo}}
                      // source={require('../../../assets/dataimages/user.png')}
                         size={65}
                         style={{backgroundColor:Colors.appgreycolor}}

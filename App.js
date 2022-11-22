@@ -26,8 +26,8 @@ import TripRoute from './src/screens/StackScreens/Trip/TripRoute/TripRoute';
 import TripCompleted from './src/screens/StackScreens/Trip/TripRoute/TripCompleted';
 import Rattings from './src/screens/StackScreens/Rattings/Rattings';
 import FindingDriver from './src/screens/StackScreens/Trip/TripRoute/FindingDriver';
-import PickupLocation from './src/screens/StackScreens/Locations/PickupLocations/PickupLocations';
-
+import Location from './src/screens/StackScreens/Trip/Location/Location';
+import TrackLocation from './src/screens/StackScreens/Trip/Location/TrackLocation';
 
 const Stack = createNativeStackNavigator();
 function App() {
@@ -132,58 +132,66 @@ function App() {
               headerShown: false,
             }}
           />
-                <Stack.Screen
+          <Stack.Screen
             name="UpdateProfile"
             component={UpdateProfile}
             options={{
               headerShown: false,
             }}
           />
-                  <Stack.Screen
+          <Stack.Screen
             name="PrivacyTerms"
             component={PrivacyTerms}
             options={{
               headerShown: false,
             }}
           />
-                      <Stack.Screen
+          <Stack.Screen
             name="CreateTrip"
             component={CreateTrip}
             options={{
               headerShown: false,
             }}
           />
-                                <Stack.Screen
+          <Stack.Screen
             name="TripRoute"
             component={TripRoute}
             options={{
               headerShown: false,
             }}
           />
-                                          <Stack.Screen
+          <Stack.Screen
             name="TripCompleted"
             component={TripCompleted}
             options={{
               headerShown: false,
             }}
           />
-            <Stack.Screen
+          <Stack.Screen
             name="Rattings"
             component={Rattings}
             options={{
               headerShown: false,
             }}
           />
-       <Stack.Screen
+          <Stack.Screen
             name="FindingDriver"
             component={FindingDriver}
             options={{
               headerShown: false,
             }}
           />
-                 <Stack.Screen
-            name="PickupLocation"
-            component={PickupLocation}
+
+          <Stack.Screen
+            name="Location"
+            component={Location}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="TrackLocation"
+            component={TrackLocation}
             options={{
               headerShown: false,
             }}
