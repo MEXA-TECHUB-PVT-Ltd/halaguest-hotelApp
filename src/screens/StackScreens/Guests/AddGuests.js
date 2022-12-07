@@ -21,6 +21,11 @@ import CustomButtonhere from '../../../components/Button/CustomButton';
 import CustomHeader from '../../../components/Header/CustomHeader';
 import CustomModal from '../../../components/Modal/CustomModal';
 
+////////////////custom dropdowns//////////////
+import CountryDropDown from '../../../components/Dropdowns/Location/Country';
+import CityDropDown from '../../../components/Dropdowns/Location/City';
+import StateDropDown from '../../../components/Dropdowns/Location/State';
+
 ////////////////////redux////////////
 import {useSelector, useDispatch} from 'react-redux';
 import { setNavPlace } from '../../../redux/actions';
@@ -48,14 +53,13 @@ const AddGuests = ({navigation}) => {
 
   /////////////////////////redux///////////////////
 
-  const {phone_no,user_image} =
+  const {phone_no,user_image,country_name,state_name,city_name,} =
     useSelector(state => state.userReducer);
   const dispatch = useDispatch();
 
       /////////////country picker states////////////
       const [CountryPickerView, setCountryPickerView] = useState(false);
       const [countryCode, setCountryCode] = useState('92');
-      const [Phoneno, setPhoneno] = useState('92');
       const [number, setnumber] = useState();
 
   ///////////////////radio button state///////////////////
@@ -63,6 +67,9 @@ const AddGuests = ({navigation}) => {
 
   //////////////link dropdown////////////////
   const refddRBSheet = useRef();
+  const refCountryddRBSheet=useRef();
+  const refStateddRBSheet=useRef();
+  const refCityddRBSheet=useRef();
   
   //camera and imagepicker
   const refRBSheet = useRef();
@@ -129,7 +136,7 @@ const AddGuests = ({navigation}) => {
         country: country,
         street_address: street_address,
         name: name,
-        phoneNo: phone_no,
+        phoneNo: number,
         created_at: date,
         hotel_id:user,
 
@@ -160,22 +167,22 @@ const AddGuests = ({navigation}) => {
     } else if (!handleValidEmail(email)) {
       setsnackbarValue({value: 'Incorrect Email', color: 'red'});
       setVisible('true');
-    } else if (city == '') {
+    }   else if (country_name == '') {
+      setsnackbarValue({value: 'Please Enter Country', color: 'red'});
+      setVisible('true');
+    }    else if (state_name == '') {
+      setsnackbarValue({value: 'Please Enter State', color: 'red'});
+      setVisible('true');
+    } else if (city_name == '') {
       setsnackbarValue({value: 'Please Enter City', color: 'red'});
       setVisible('true');
     } 
-    else if (state == '') {
-      setsnackbarValue({value: 'Please Enter State', color: 'red'});
-      setVisible('true');
-    }
+
     else if (zipcode == '') {
       setsnackbarValue({value: 'Please Enter Zipcode', color: 'red'});
       setVisible('true');
     }
-    else if (country == '') {
-      setsnackbarValue({value: 'Please Enter Country', color: 'red'});
-      setVisible('true');
-    }
+ 
     else if (street_address == '') {
       setsnackbarValue({value: 'Please Enter Street Address', color: 'red'});
       setVisible('true');
@@ -309,60 +316,47 @@ const AddGuests = ({navigation}) => {
        onChangeText={setnumber}
        autoCapitalize="none"
        keyboardType='number-pad'
-       returnKeyType={'next'}
-       onSubmitEditing={() => {
-         ref_input4.current.focus();
-       }}
        placeholderTextColor={Colors.inputtextcolor}
        style={[Inputstyles.input,{width:wp(62)}]}
      />
    </View>
-              {/* <TouchableOpacity onPress={()=> refddRBSheet.current.open()} >
-              <View style={Inputstyles.action}>
-                <TextInput
-                  ref={ref_input2}
-                  value={dispatcher}
-                  //onChangeText={setEmail}
-                  returnKeyType={'next'}
-                  onSubmitEditing={() => {
-                    ref_input3.current.focus();
-                  }}
-                  blurOnSubmit={false}
-                  placeholderTextColor={Colors.inputtextcolor}
-              
-                  style={Inputstyles.input}
-                  editable={false}
-                />
-              </View>
-              </TouchableOpacity> */}
-              <Text style={Inputstyles.inputtoptext}>City</Text>
-              <View style={Inputstyles.action}>
-                <TextInput
-                  ref={ref_input4}
-                  onChangeText={setCity}
-                  returnKeyType={'next'}
-                  onSubmitEditing={() => {
-                    ref_input5.current.focus();
-                  }}
-                  blurOnSubmit={false}
-                  placeholderTextColor={Colors.inputtextcolor}
-                  style={Inputstyles.input}
-                />
-              </View>
-              <Text style={Inputstyles.inputtoptext}>State</Text>
-              <View style={Inputstyles.action}>
-                <TextInput
-                  ref={ref_input5}
-                  onChangeText={setState}
-                  returnKeyType={'next'}
-                  onSubmitEditing={() => {
-                    ref_input6.current.focus();
-                  }}
-                  blurOnSubmit={false}
-                  placeholderTextColor={Colors.inputtextcolor}
-                  style={Inputstyles.input}
-                />
-              </View>
+
+       <Text style={Inputstyles.inputtoptext}>Country</Text>
+          <TouchableOpacity
+                onPress={() => refCountryddRBSheet.current.open()}>
+          <View style={Inputstyles.action}>
+            <TextInput
+                  value={country_name}
+              placeholderTextColor={Colors.inputtextcolor}
+              style={Inputstyles.input}
+              editable={false}
+            />
+          </View>
+          </TouchableOpacity>
+          <Text style={Inputstyles.inputtoptext}>State</Text>
+          <TouchableOpacity
+                onPress={() => refStateddRBSheet.current.open()}>
+          <View style={Inputstyles.action}>
+            <TextInput
+                 value={state_name}
+              placeholderTextColor={Colors.inputtextcolor}
+              style={Inputstyles.input}
+              editable={false}
+            />
+          </View>
+          </TouchableOpacity>
+          <Text style={Inputstyles.inputtoptext}>City</Text>
+          <TouchableOpacity
+                onPress={() => refCityddRBSheet.current.open()}>
+          <View style={Inputstyles.action}>
+            <TextInput
+                  value={city_name}
+              placeholderTextColor={Colors.inputtextcolor}
+              style={Inputstyles.input}
+              editable={false}
+            />
+          </View>
+        </TouchableOpacity>
               <Text style={Inputstyles.inputtoptext}>Zip_Code</Text>
               <View style={Inputstyles.action}>
                 <TextInput
@@ -375,20 +369,7 @@ const AddGuests = ({navigation}) => {
                   blurOnSubmit={false}
                   placeholderTextColor={Colors.inputtextcolor}
                   style={Inputstyles.input}
-                />
-              </View>
-              <Text style={Inputstyles.inputtoptext}>Country</Text>
-              <View style={Inputstyles.action}>
-                <TextInput
-                  ref={ref_input7}
-                  onChangeText={setCountry}
-                  returnKeyType={'next'}
-                  onSubmitEditing={() => {
-                    ref_input8.current.focus();
-                  }}
-                  blurOnSubmit={false}
-                  placeholderTextColor={Colors.inputtextcolor}
-                  style={Inputstyles.input}
+                  keyboardType='number-pad'
                 />
               </View>
               <Text style={Inputstyles.inputtoptext}>Street Address</Text>
@@ -465,11 +446,23 @@ const AddGuests = ({navigation}) => {
                 modalVisible={modalVisible}
                 CloseModal={() => setModalVisible(false)}
                 Icon={appImages.CheckCircle}
-                text={'Account Verified Successfully'}
+                text={'Created Guest Successfully'}
                 leftbuttontext={'CANCLE'}
                 rightbuttontext={'OK'}
  onPress={()=> {setModalVisible(false),navigation.goBack()}}
                 /> 
+                                <CountryDropDown
+          refRBSheet={refCountryddRBSheet}
+          onClose={() => refCountryddRBSheet.current.close()}
+        />
+                         <StateDropDown
+          refRBSheet={refStateddRBSheet}
+          onClose={() => refStateddRBSheet.current.close()}
+        />
+                         <CityDropDown
+          refRBSheet={refCityddRBSheet}
+          onClose={() => refCityddRBSheet.current.close()}
+        />
       </SafeAreaView>
     </ScrollView>
   );

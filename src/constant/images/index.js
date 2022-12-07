@@ -1,12 +1,10 @@
-
-
 const IMAGES_DIR = '../../assets/images/';
 
 const appImages = {
   //////////////auth///////////
   logo: require(IMAGES_DIR + 'logo.png'),
   SplashBG: require(IMAGES_DIR + 'SplashBG.png'),
- 
+
   Camera: require(IMAGES_DIR + 'Camera.png'),
   User: require(IMAGES_DIR + 'user.png'),
   ProfileUser: require(IMAGES_DIR + 'profileuser.png'),
@@ -27,7 +25,11 @@ const appImages = {
   Trips: require(IMAGES_DIR + 'trips.png'),
   Transaction: require(IMAGES_DIR + 'transaction.png'),
 
-  
+  //////////////////Notification///////////////
+  NotiCheck: require(IMAGES_DIR + 'noticheck.png'),
+  NotiCancel: require(IMAGES_DIR + 'noticancel.png'),
+  NotiSchedule: require(IMAGES_DIR + 'notischedule.png'),
+
   //////////////////TrackLocation images///////////////
   icCurLoc: require(IMAGES_DIR + 'Oval.png'),
   icGreenMarker: require(IMAGES_DIR + 'greenMarker.png'),

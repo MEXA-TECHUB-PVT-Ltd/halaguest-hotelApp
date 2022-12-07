@@ -127,7 +127,7 @@ const CreateTrip = ({navigation,route}) => {
         driver_notes: drivernotes,
         estimated_amount: trip_amount,
         total_amount: trip_total_amount,
-        status: 'schedule',
+        status: 'created',
         cancellation_reason: '',
         canceled_by: '',
         canceled_by_id: '',

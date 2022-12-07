@@ -22,7 +22,7 @@ const GuestCards = (props) => {
                     <Avatar.Image
                     source={{uri:BASE_URL+props.guestlogo}}
                      // source={require('../../../assets/dataimages/user.png')}
-                        size={65}
+                        size={55}
                         style={{backgroundColor:Colors.appgreycolor}}
                     />
                     <View style={{

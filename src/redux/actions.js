@@ -1,6 +1,7 @@
 
  ////////////////APP STATES/////////////////////
 export const SET_HOTEL_TYPE = 'SET_HOTEL_TYPE';
+export const SET_HOTEL_TYPE_ID = 'SET_HOTEL_TYPE_ID';
 
 ////////////////////Account Data Submition////////////////
 export const SET_HOTEL_SUBMIT_ID = 'SET_HOTEL_SUBMIT_ID';
@@ -49,6 +50,13 @@ export const setHotelType = hoteltype => dispatch => {
         payload: hoteltype,
     });
 };
+export const setHotelTypeId = hoteltype_id => dispatch => {
+    dispatch({
+        type: SET_HOTEL_TYPE_ID,
+        payload: hoteltype_id,
+    });
+};
+
 
 ////////////////////Account Data Submition////////////////
 export const setHotelSubmitId = hotel_submit_id => dispatch => {
@@ -210,5 +218,50 @@ export const setDropoffLocationAddress = dropoff_location_address => dispatch =>
     dispatch({
         type: SET_DROPOFF_LOCATION_ADDRESS,
         payload: dropoff_location_address,
+    });
+};
+
+  ////////////////Locations STATES and Function/////////////////////
+  export const SET_COUNTRY_ID = 'SET_COUNTRY_ID';
+  export const SET_COUNTRY_NAME = 'SET_COUNTRY_NAME';
+  export const SET_STATE_ID = 'SET_STATE_ID';
+  export const SET_STATE_NAME = 'SET_STATE_NAME';
+  export const SET_CITY_ID = 'SET_CITY_ID';
+  export const SET_CITY_NAME = 'SET_CITY_NAME';
+
+  export const setCountryName = country_name => dispatch => {
+    dispatch({
+        type: SET_COUNTRY_NAME,
+        payload: country_name,
+    });
+};
+export const setCountryId = country_id => dispatch => {
+    dispatch({
+        type: SET_COUNTRY_ID,
+        payload: country_id,
+    });
+};
+export const setStateName = state_name => dispatch => {
+    dispatch({
+        type: SET_STATE_NAME,
+        payload: state_name,
+    });
+};
+export const setStateId = state_id => dispatch => {
+    dispatch({
+        type: SET_STATE_ID,
+        payload: state_id,
+    });
+};
+export const setCityName = city_name => dispatch => {
+    dispatch({
+        type: SET_CITY_NAME,
+        payload: city_name,
+    });
+};
+export const setCityId = city_id => dispatch => {
+    dispatch({
+        type: SET_CITY_ID,
+        payload: city_id,
     });
 };

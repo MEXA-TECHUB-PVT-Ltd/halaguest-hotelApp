@@ -8,6 +8,7 @@ import {SafeAreaView, StyleSheet,TextInput,  Animated,ScrollView,Image,
 import LottieModal from '../../../../components/Modal/LottieModal/LottieModal';
 import CustomModal from '../../../../components/Modal/CustomModal';
 import ReasonModal from '../../../../components/Modal/ReasonModal';
+import Loader from '../../../../components/Loader/Loader';
 
 //////////////app pakages////////////
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -51,6 +52,8 @@ const FindingDriver = ({navigation}) => {
       const [modalVisible, setModalVisible] = useState(false);
       const [modalVisible1, setModalVisible1] = useState(false);
 
+      //////////////////loader states////////////////
+const [loading, setloading] = useState(true);
 
     ////////////isfocused//////////
     const isfocussed = useIsFocused()
@@ -190,6 +193,9 @@ const GetUser=async() => {
 
   return (
       <View style={[styles.container,{marginBottom:mapmargin, backgroundColor: theme === false? 'white':'  black'}]}>
+          <Loader
+    isLoading={loading}
+    />
         <MapView
         ref={_map}
           style={[styles.mapStyle,{marginBottom:mapmargin}]}

@@ -22,7 +22,8 @@ card:
   alignItems:'center',
   backgroundColor:'white',
   paddingHorizontal:wp(5),
-  paddingVertical:hp(1),
+  paddingVertical:hp(0),
+  paddingTop:hp(0.7),
   flexDirection:'row',
   shadowColor: "#000",
   shadowOffset: {

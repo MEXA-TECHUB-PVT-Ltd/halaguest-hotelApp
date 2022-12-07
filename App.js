@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {View, Text} from 'react-native';
-import {NavigationContainer, useNavigation} from '@react-navigation/native';
+import {NavigationContainer, useNavigation,createNavigationContainerRef} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-// //////////////notification/////////////////
-// import messaging from '@react-native-firebase/messaging';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+//////////////notification/////////////////
+import messaging from '@react-native-firebase/messaging';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {Provider} from 'react-redux';
 import {Store} from './src/redux/store';
@@ -28,53 +28,50 @@ import Rattings from './src/screens/StackScreens/Rattings/Rattings';
 import FindingDriver from './src/screens/StackScreens/Trip/TripRoute/FindingDriver';
 import Location from './src/screens/StackScreens/Trip/Location/Location';
 import TrackLocation from './src/screens/StackScreens/Trip/Location/TrackLocation';
+import Notification from './src/screens/StackScreens/Notification/Notification';
 
 const Stack = createNativeStackNavigator();
-function App() {
-  //const navigation = useNavigation();
+const navigationRef = createNavigationContainerRef()
+function App(props) {
   const [loading, setLoading] = React.useState(true);
-  const [initialRoute, setInitialRoute] = React.useState('Home');
+  const [initialRoute, setInitialRoute] = React.useState('AuthNav');
+  React.useEffect(() => {
+    // Assume a message-notification contains a "type" property in the data payload of the screen to open
 
-  // React.useEffect( () => {
-  //   // Assume a message-notification contains a "type" property in the data payload of the screen to open
-  // //   messaging().onMessage(remoteMessage => {
-  // //     navigation.navigate('GooglePassword');
-  // //     console.log(props.navigation)
-  // // });
-  //   messaging().onNotificationOpenedApp(remoteMessage => {
-  //     console.log(
-  //       'Notification caused app to open from background state:',
-  //       remoteMessage.notification.body,
-  //     );
-  // AsyncStorage.setItem('Notification',remoteMessage.notification.body);
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage.notification,
+      );
+      console.log("notification here", JSON.stringify(remoteMessage.data.type))
+    //setInitialRoute(remoteMessage.data.type)
+    navigationRef.navigate(remoteMessage.data.type);
+      //navigation.navigate(remoteMessage.data.type);
+    });
 
-  //   //navigation.navigate('UpdateProfile');
-  //   });
+    // Check whether an initial notification is available
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          console.log(
+            'Notification caused app to open from quit state:',
+            remoteMessage.notification,
+          );
+          console.log("notification here",remoteMessage.data.type)
+          setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
+        }
+        setLoading(false);
+      });
+  }, []);
 
-  //  // Check whether an initial notification is available
-  //  messaging()
-  //     .getInitialNotification()
-  //     .then(remoteMessage => {
-  //       if (remoteMessage) {
-  //         console.log(
-  //           'Notification caused app to open from quit state:',
-  //           remoteMessage.notification.body,
-  //         );
-  //        AsyncStorage.removeItem('Notification');
-  //         AsyncStorage.setItem('Notification',remoteMessage.notification.body);
-  //         //navigation.navigate('UpdateProfile');s
-  //         //setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
-  //     //setInitialRoute(remoteMessage.data.type);
-  //       }
-  //       setLoading(false);
-  //    });
-  //   if (loading) {
-  //     return null;
-  //   }
-  // }, []);
+  if (loading) {
+    return null;
+  }
+
   return (
     <Provider store={Store}>
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef}>
         <Stack.Navigator initialRouteName={initialRoute}>
           <Stack.Screen
             name="AuthNav"
@@ -192,6 +189,13 @@ function App() {
           <Stack.Screen
             name="TrackLocation"
             component={TrackLocation}
+            options={{
+              headerShown: false,
+            }}
+          />
+              <Stack.Screen
+            name="Notification"
+            component={Notification}
             options={{
               headerShown: false,
             }}

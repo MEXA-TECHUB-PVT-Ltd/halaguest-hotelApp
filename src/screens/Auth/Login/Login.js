@@ -23,32 +23,11 @@ import Colors from '../../../utills/Colors';
 import { appImages } from '../../../constant/images';
 import { widthPercentageToDP as wp ,heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
-
-/////////////////////////////////firebase///////////////////////
-import auth from '@react-native-firebase/auth';
+////////////////api////////////////
+import axios from 'axios';
+import { BASE_URL } from '../../../utills/ApiRootUrl';
 
 const Login = ({ navigation }) => {
-
-/////////////////////////firebase////////////////
-  // If null, no SMS has been sent
-  const [confirm, setConfirm] = useState(null);
-
-  const [code, setCode] = useState('');
-
-  // Handle the button press
-  async function signInWithPhoneNumber(phoneNumber) {
-    const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
-    setConfirm(confirmation);
-    console.log('code.',confirmation);
-  }
-
-  async function confirmCode() {
-    try {
-      await confirm.confirm(code);
-    } catch (error) {
-      console.log('Invalid code.');
-    }
-  }
 
     ///////////////////checkbox state///////////////////
     const [checked, setChecked] = React.useState(false);
@@ -60,7 +39,7 @@ const Login = ({ navigation }) => {
 
     ///////////////country picker states//////////////////////
   const [CountryPickerView, setCountryPickerView] = useState(false);
-  const [countryCode, setCountryCode] = useState('92');
+  const [countryCode, setCountryCode] = useState('968');
   const [number, setnumber] = useState('');
 
   //////////////////////// API forms validations////////////////////////
@@ -75,14 +54,29 @@ const Login = ({ navigation }) => {
       setVisible('true');
     } 
     else {
-      navigation.navigate('Verification',{Phonenumber:countryCode+number})
+      SendSms()
+      //navigation.navigate('Verification',{Phonenumber:countryCode+number})
     }
   };
+  //////////////////////Api Calling Login/////////////////
+  const SendSms = async () => {
+    console.log('response number', countryCode,number,"+"+countryCode+number,BASE_URL + 'api/sms/createOTP');
+axios({
+  method: 'POST',
+  url: BASE_URL + 'api/sms/createOTP',
+  data: {
+    toContact: "+"+countryCode+number
+  },
+})
+  .then(async function (response) {
+    console.log('response in driver login', JSON.stringify(response.data));
+    navigation.navigate('Verification',{Phonenumber:countryCode+number,code:response.data.otp})
 
-  useEffect(() => {
-
-  }, []);
-
+  })
+  .catch(function (error) {
+    console.log('error', error);
+  });
+};
   return (
 
     <SafeAreaView style={styles.container}> 
@@ -172,7 +166,6 @@ const Login = ({ navigation }) => {
             topDistance={30}
             onPress={() => 
              {
-              //signInWithPhoneNumber('+'+countryCode+number)
               LoginValidation()
             }
             }
