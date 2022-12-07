@@ -3,33 +3,20 @@ import {
   SafeAreaView,
   FlatList,
   StatusBar,
-  ImageBackground,
-  BackHandler,
   ScrollView,
   Image,
   View,
   Text,
   TouchableOpacity,
-  TextInput,
-  ActivityIndicator,
 } from 'react-native';
 
-////////////////////app pakages//////////////
-import {Checkbox} from 'react-native-paper';
-
-//////////////////app icons////////////////
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import Icon from 'react-native-vector-icons/Ionicons';
+///////////////////react native navigation///////////////
+import {useIsFocused} from '@react-navigation/native';
 
 //////////////////////app components///////////////
 import CustomHeader from '../../../components/Header/CustomHeader';
-import CustomTopTabs from '../../../components/TopTabs/CustomTopTabs';
 import IconsTopTabs from '../../../components/TopTabs/IconsTabs/IconsTopTabs';
-import DashboardHeader from '../../../components/Header/DashboardHeade';
-import ViewAll from '../../../components/ViewAll/ViewAll';
-import GuestCards from '../../../components/CustomCards/GuestCards/GuestCards';
 import OrdersCards from '../../../components/CustomCards/OrderCards/Orders';
-import CustomCards from '../../../components/CustomCards/CustomCards';
 
 ////////////////////redux////////////
 import {useSelector, useDispatch} from 'react-redux';
@@ -59,8 +46,8 @@ import Inputstyles from '../../../styles/GlobalStyles/Inputstyles';
 import {appImages} from '../../../constant/images';
 
 const Orders = ({navigation}) => {
-  //Modal States
-  const [modalVisible, setModalVisible] = useState(false);
+  ////////////isfocused//////////
+  const isfocussed = useIsFocused();
 
   ///////////////////redux states///////////////////////
   const {
@@ -74,19 +61,43 @@ const Orders = ({navigation}) => {
 
   /////////////main menu status states/////////////
   const [Schedule, setSchedule] = useState(true);
+  const [Ongoing, setOngoing] = useState(false);
   const [Complete, setComplete] = useState(false);
+  const [Cancel, setCancel] = useState(false);
 
   /////////////main menu status states/////////////
   const [ScheduleOrders, setScheduleOrders] = useState('');
   const GetScheduleOrders = async () => {
     var user = await AsyncStorage.getItem('Userid');
     axios({
-      method: 'GET',
-      url: BASE_URL + 'api/Order/hotelOrdersScheduled/' + user,
+      method: 'POST',
+      url: BASE_URL + 'api/Order/getHotelOrdersByStatus',
+      data: {
+        driver_id: user,
+        status: 'schedule',
+      },
     })
       .then(async function (response) {
-        console.log('list data here ', response.data);
         setScheduleOrders(response.data);
+      })
+      .catch(function (error) {
+        console.log('error', error);
+      });
+  };
+  /////////////main menu status states/////////////
+  const [OngoingOrders, setOngoingOrders] = useState('');
+  const GetOngoingOrders = async () => {
+    var user = await AsyncStorage.getItem('Userid');
+    axios({
+      method: 'POST',
+      url: BASE_URL + 'api/Order/getHotelOrdersByStatus',
+      data: {
+        hotel_id: user,
+        status: 'ongoing',
+      },
+    })
+      .then(async function (response) {
+        setOngoingOrders(response.data);
       })
       .catch(function (error) {
         console.log('error', error);
@@ -97,21 +108,48 @@ const Orders = ({navigation}) => {
   const GetCompleteOrders = async () => {
     var user = await AsyncStorage.getItem('Userid');
     axios({
-      method: 'GET',
-      url: BASE_URL + 'api/Order/hotelOrdersCompleted/' + user,
+      method: 'POST',
+      url: BASE_URL + 'api/Order/getHotelOrdersByStatus',
+      data: {
+        hotel_id: user,
+        status: 'completed',
+      },
     })
       .then(async function (response) {
-        console.log('list data here ', response.data);
         setCompleteOrders(response.data);
       })
       .catch(function (error) {
         console.log('error', error);
       });
   };
+  /////////////main menu status states/////////////
+  const [CancelOrders, setCancelOrders] = useState('');
+  const GetCancelOrders = async () => {
+    var user = await AsyncStorage.getItem('Userid');
+    axios({
+      method: 'POST',
+      url: BASE_URL + 'api/Order/getHotelOrdersByStatus',
+      data: {
+        hotel_id: user,
+        status: 'cancel',
+      },
+    })
+      .then(async function (response) {
+        setCancelOrders(response.data);
+      })
+      .catch(function (error) {
+        console.log('error', error);
+      });
+  };
+
   useEffect(() => {
-    GetScheduleOrders();
-    GetCompleteOrders();
-  }, []);
+    if (isfocussed) {
+      GetScheduleOrders();
+      GetOngoingOrders();
+      GetCompleteOrders();
+      GetCancelOrders();
+    }
+  }, [isfocussed]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -120,34 +158,68 @@ const Orders = ({navigation}) => {
         showsHorizontalScrollIndicator={false}>
         <StatusBar backgroundColor={'black'} barStyle="light-content" />
         <CustomHeader headerlabel={'Orders'} />
-        <View style={[TopTabstyles.TopTabView, {paddingHorizontal: wp(10)}]}>
+        <View style={[TopTabstyles.TopTabView, {paddingHorizontal: wp(3)}]}>
           <TouchableOpacity
             onPress={() => {
-              setSchedule(true), setComplete(false);
+              setSchedule(true),
+                setOngoing(false),
+                setComplete(false),
+                setCancel(false);
             }}>
             <IconsTopTabs
               title={'Schedule'}
               icon={appImages.Schedule}
-              width={'25%'}
+              width={'20%'}
               state={Schedule}
             />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              setSchedule(false), setComplete(true);
+              setSchedule(false),
+                setOngoing(true),
+                setComplete(false),
+                setCancel(false);
+            }}>
+            <IconsTopTabs
+              title={'Ongoing'}
+              icon={appImages.Ongoing}
+              width={'20%'}
+              state={Ongoing}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setSchedule(false),
+                setOngoing(false),
+                setComplete(true),
+                setCancel(false);
             }}>
             <IconsTopTabs
               title={'Completed'}
               icon={appImages.Completed}
-              width={'25%'}
+              width={'20%'}
               state={Complete}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setSchedule(false),
+                setOngoing(false),
+                setComplete(false),
+                setCancel(true);
+            }}>
+            <IconsTopTabs
+              title={'Cancel'}
+              icon={appImages.Cancel}
+              width={'20%'}
+              state={Cancel}
             />
           </TouchableOpacity>
         </View>
         {Schedule
           ? ScheduleOrders === ''
             ? null
-            : ScheduleOrders.slice(0, 3).map((item, key) => (
+            : ScheduleOrders.map((item, key) => (
                 <TouchableOpacity
                   onPress={() =>
                     navigation.navigate('OrderDetail', {
@@ -163,10 +235,35 @@ const Orders = ({navigation}) => {
                   />
                 </TouchableOpacity>
               ))
+          : Ongoing
+          ? OngoingOrders === ''
+            ? null
+            : OngoingOrders.map((item, key) => (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('TripRoute', {
+                      orderid: item._id,
+                      driverLng: item.driver_Long,
+                      driverLat: item.driver_Lat,
+                      pickupLat: item.pickup_lat,
+                      pickupLng: item.pickup_log,
+                      dropoffLat: item.dropoff_lat,
+                      dropoffLng: item.dropoff_log,
+                      navplace: 'ongoing',
+                    })
+                  }>
+                  <OrdersCards
+                    time={item.flight_time+item.driver_Long+item.driver_Lat+item.pickup_lat+item.pickup_log}
+                    price={item.total_amount + '$'}
+                    pickupLoc={item.pickup_location}
+                    dropoffLoc={item.dropoff_location}
+                  />
+                </TouchableOpacity>
+              ))
           : Complete
           ? CompleteOrders === ''
             ? null
-            : CompleteOrders.slice(0, 3).map((item, key) => (
+            : CompleteOrders.map((item, key) => (
                 <TouchableOpacity
                   onPress={() =>
                     navigation.navigate('OrderDetail', {
@@ -176,9 +273,32 @@ const Orders = ({navigation}) => {
                   }>
                   <OrdersCards
                     time={item.flight_time}
+                    date={item.flight_date}
                     price={item.total_amount + '$'}
                     pickupLoc={item.pickup_location}
                     dropoffLoc={item.dropoff_location}
+                    type={'Schedule'}
+                  />
+                </TouchableOpacity>
+              ))
+          : Cancel
+          ? CancelOrders === ''
+            ? null
+            : CancelOrders.map((item, key) => (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('OrderDetail', {
+                      orderid: item._id,
+                      navplace: 'Cancel',
+                    })
+                  }>
+                  <OrdersCards
+                    time={item.flight_time}
+                    date={item.flight_date}
+                    price={item.total_amount + '$'}
+                    pickupLoc={item.pickup_location}
+                    dropoffLoc={item.dropoff_location}
+                    type={'Schedule'}
                   />
                 </TouchableOpacity>
               ))

@@ -18,14 +18,19 @@ const styles = StyleSheet.create({
       height: Height * 0.08,
       width: Width ,
       paddingHorizontal:wp(0),
-      justifyContent:'center',
+      justifyContent:'space-between',
       alignItems:'center'
     },
-    iconview:
+    lefticonview:
     { 
         justifyContent: 'center', 
-        marginRight: wp(0)
+        marginLeft: wp(5)
      },
+     righticonview:
+     { 
+         justifyContent: 'center', 
+         marginRight: wp(5)
+      },
     labelView: {
       marginHorizontal: wp(5),
       flexDirection: 'column',

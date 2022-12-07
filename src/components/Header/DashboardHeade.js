@@ -105,8 +105,8 @@ marginLeft:wp(3)
     },
     logo:
     {
-        height:wp(36),
-        width:wp(36),
+        height:wp(16),
+        width:wp(16),
         borderRadius:wp(30)
       },
       labelmaintext:

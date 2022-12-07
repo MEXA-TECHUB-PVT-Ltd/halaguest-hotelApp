@@ -24,7 +24,7 @@ const CustomHeader = ({ navigation, headerlabel,iconPress,icon,
 
   return (
       <View style={[styles.headerView]} >
-        <View style={styles.iconview}>
+        <View style={styles.lefticonview}>
           <Icon name={icon} size={30} 
           color= {'white'}
            onPress={iconPress} />
@@ -39,7 +39,7 @@ null
             </View>
 
 
-          <View style={styles.iconview}>
+          <View style={styles.righticonview}>
           <Icon name={searchicon} size={30} 
           color= {'white'}
           onPress={onpresseacrh} 

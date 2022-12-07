@@ -4,10 +4,6 @@ import {
  View, Text, TouchableOpacity,
 } from 'react-native';
 
-/////////////////////app pakages///////////////
-import { Avatar} from 'react-native-paper';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-
 //////////////////app components///////////////
 import CustomHeader from '../../../components/Header/CustomHeader';
 import SettingsMenu from '../../../components/SettingsView/SettingsMenu';
@@ -19,17 +15,7 @@ import Colors from '../../../utills/Colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp }
   from 'react-native-responsive-screen';
 
-//////////////////////////app api/////////////////////////
-import axios from 'axios';
-import { BASE_URL } from '../../../utills/ApiRootUrl';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import RNFetchBlob from 'rn-fetch-blob'
-
-/////////////////////app images/////////////////////
-import { appImages } from '../../../constant/images';
-
 const Settings = ({ navigation }) => {
-
 
   return (
 
@@ -43,10 +29,10 @@ const Settings = ({ navigation }) => {
         />
 
 <View style={{marginTop:hp(6)}}></View>
-<SettingsMenu
+{/* <SettingsMenu
        label={'Update Profile'}
        labelPress={()=>navigation.navigate('UpdateProfile')}
-       />
+       /> */}
        <SettingsMenu
        label={'Privacy Policy'}
        labelPress={()=>navigation.navigate('PrivacyTerms',{navplace:'Privacy'})}
@@ -55,10 +41,10 @@ const Settings = ({ navigation }) => {
        label={'Terms & Condition'}
        labelPress={()=>navigation.navigate('PrivacyTerms',{navplace:'Terms'})}
        />
-       <SettingsMenu
+       {/* <SettingsMenu
        label={'Contact Us'}
-       //labelPress={()=>navigation.navigate('Contact Us')}
-       />
+       labelPress={()=>navigation.navigate('Contact Us')}
+       /> */}
        <SettingsMenu
        label={'How to Use'}
        //labelPress={()=>navigation.navigate('How to Use')}
@@ -66,7 +52,7 @@ const Settings = ({ navigation }) => {
 <CustomButtonhere
             title={'LOGOUT'}
             widthset={78}
-            topDistance={20}
+            topDistance={40}
             icon={'power'}
             onPress={() => 
              {

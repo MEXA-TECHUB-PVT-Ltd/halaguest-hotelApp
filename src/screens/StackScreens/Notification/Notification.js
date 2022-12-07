@@ -1,7 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
-    SafeAreaView,  StatusBar, 
-    ScrollView,TouchableOpacity,
+  SafeAreaView,
+  StatusBar,
+  ScrollView,
+  TouchableOpacity,
 } from 'react-native';
 
 //////////////////////app components///////////////
@@ -10,25 +12,26 @@ import NotificationView from '../../../components/NotificationView/NotificationV
 
 ////////////////////redux////////////
 import {useSelector, useDispatch} from 'react-redux';
-import { setNavPlace } from '../../../redux/actions';
+import {setNavPlace} from '../../../redux/actions';
 
 ////////////////api////////////////
 import axios from 'axios';
-import { BASE_URL } from '../../../utills/ApiRootUrl';
+import {BASE_URL} from '../../../utills/ApiRootUrl';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
 
 /////////////////////app styles////////////
 import styles from './styles';
 
 /////////////////app images///////////
-import { appImages } from '../../../constant/images';
+import {appImages} from '../../../constant/images';
 
-const Notification = ({ navigation }) => {
-
-    ///////////////////redux states///////////////////////
-    const {hoteltype } =
-    useSelector(state => state.userReducer);
+const Notification = ({navigation}) => {
+  ///////////////////redux states///////////////////////
+  const {hoteltype} = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
 
   /////////////Get Notification/////////////
@@ -49,49 +52,48 @@ const Notification = ({ navigation }) => {
         console.log('error', error);
       });
   };
-    useEffect(() => {
-      GetNotifications()
-      
-    }, []);
-    return (
-<SafeAreaView style={styles.container}>
-    <ScrollView 
-     showsVerticalScrollIndicator={false}
-     showsHorizontalScrollIndicator={false}>
-            <StatusBar backgroundColor={'black'} barStyle="light-content" />
-            <CustomHeader
+  useEffect(() => {
+    GetNotifications();
+  }, []);
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}>
+        <StatusBar backgroundColor={'black'} barStyle="light-content" />
+        <CustomHeader
           headerlabel={'Notifications'}
           iconPress={() => {
             navigation.goBack();
           }}
           icon={'chevron-back'}
         />
-{/* <NotificationView
+        {/* <NotificationView
        label={'Update Profile'}
        labelPress={()=>navigation.navigate('UpdateProfile')}
        /> */}
-{
-Notifications === ''?null:
-
-Notifications.map((item, key) => (
-//    <TouchableOpacity onPress={()=>navigation.navigate('OrderDetail',{orderid:item._id,navplace:'Schedule'})}>
-//   </TouchableOpacity>
-        <NotificationView
-                                      notitext={item.detail}
-                                       notitime={item.created_at}
-                                       notiicon={item.detail === 'Order 123 is completed sucessfully' ?appImages.NotiCheck:
-                                       item.detail === 'Order 123 is cancel' ?appImages.NotiCancel:null
-                                      }
-                                   />
-                          
-))
-        
-}
-
-</ScrollView>
-</SafeAreaView>
-
-    )
+        {Notifications === ''
+          ? null
+          : Notifications.map((item, key) => (
+              //    <TouchableOpacity onPress={()=>navigation.navigate('OrderDetail',{orderid:item._id,navplace:'Schedule'})}>
+              //   </TouchableOpacity>
+              <NotificationView
+                notitext={item.detail}
+                notitime={item.created_at}
+                notiicon={
+                  item.type === 'completed'
+                    ? appImages.NotiCheck
+                    : item.type === 'cancel'
+                    ? appImages.NotiCancel 
+                    : item.type === 'schedule'
+                    ? appImages.NotiSchedule
+                    : appImages.NotiOther
+                }
+              />
+            ))}
+      </ScrollView>
+    </SafeAreaView>
+  );
 };
 
 export default Notification;

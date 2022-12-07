@@ -136,7 +136,10 @@ useEffect(() => {
 GetLocation()
 GetUser()
 }
-
+// setTimeout(
+// setLoading(false),
+//   1000
+// );
   },[isfocussed]);
 //////////////// location data state///////////
 const [pinsdata, setPinsdata] = useState();

@@ -28,7 +28,7 @@ const NotificationView = ({ navigation,notitext,notitime,labelPress,icon,notiico
           <View style={{flexDirection:"row",marginTop:hp(0),
         width:wp(75)}}>
         <Image
-            source={appImages.NotiCheck}
+            source={notiicon}
             style={styles.logo}
             resizeMode='contain'
           />
