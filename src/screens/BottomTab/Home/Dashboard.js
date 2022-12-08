@@ -66,9 +66,10 @@ const Home = ({navigation}) => {
   /////////////main menu status states/////////////
   const [Orders, setOrders] = useState('');
   const GetOrders = async () => {
+    var user = await AsyncStorage.getItem('Userid');
     axios({
       method: 'GET',
-      url: BASE_URL + 'api/Order/allOrders',
+      url: BASE_URL + 'api/Order/getHotelOrdersByTime/'+user,
     })
       .then(async function (response) {
         console.log('list data here ', response.data);
@@ -98,32 +99,50 @@ const Home = ({navigation}) => {
         />
         <ViewAll
           headerlabel={'Guests'}
-          onpress={() => navigation.navigate('GuestsList')}
+          onpress={() => navigation.navigate('GuestsList',{navplace:'Home'})}
         />
         {Guests === ''
           ? null
           : Guests.slice(0, 3).map((item, key) => (
+            <TouchableOpacity
+            activeOpacity={0.9}
+              onPress={() =>
+                navigation.navigate('GuestsDetail', {
+                  guest_id:item._id,
+                  navplace: 'Home',
+                })
+              }>
               <GuestCards
                 guestlogo={item.img}
                 guestname={item.name}
                 guestemail={item.email}
                 guestgender={item.gender}
               />
+              </TouchableOpacity>
             ))}
 
         <ViewAll
           headerlabel={'Orders'}
-          onpress={() => navigation.navigate('OrderDetail')}
+          onpress={() => navigation.navigate('Orders',{navplace:'home'})}
         />
         {Orders === ''
           ? null
           : Orders.slice(0, 3).map((item, key) => (
+            <TouchableOpacity
+            activeOpacity={0.9}
+                onPress={() =>
+                  navigation.navigate('OrderDetail', {
+                    orderid: item._id,
+                    navplace: 'Schedule',
+                  })
+              }>
               <OrdersCards
                 time={item.flight_time}
                 price={item.total_amount + '$'}
                 pickupLoc={item.pickup_location}
                 dropoffLoc={item.dropoff_location}
               />
+              </TouchableOpacity>
             ))}
       </ScrollView>
       <TouchableOpacity

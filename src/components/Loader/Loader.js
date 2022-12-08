@@ -1,6 +1,9 @@
 import React from 'react';
 import { View, Modal, ActivityIndicator } from 'react-native';
 
+/////////////////app color//////
+import Colors from '../../utills/Colors';
+
 const Loader = ({ isLoading = false }) => {
     if (isLoading) {
         return (
@@ -15,7 +18,7 @@ const Loader = ({ isLoading = false }) => {
                     justifyContent: 'center',
                     backgroundColor: "rgba(0,0,0,0.3)"
                 }}>
-                    <ActivityIndicator size={45} color={'blue'} />
+                    <ActivityIndicator size={45} color={Colors.Appthemecolor} />
                 </View>
             </Modal>
         );

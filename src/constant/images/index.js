@@ -38,5 +38,8 @@ blueloc: require(IMAGES_DIR + 'bluelocicon.png'),
 orangeloc: require(IMAGES_DIR + 'orangelocicon.png'),
 car: require(IMAGES_DIR + 'car.png'),
 
+///////////////invoice//////////////
+uninvoice: require(IMAGES_DIR + 'uninvoice.png'),
+
 };
 export {appImages};

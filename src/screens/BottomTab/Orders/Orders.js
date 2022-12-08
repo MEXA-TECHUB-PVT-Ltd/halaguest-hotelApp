@@ -221,6 +221,7 @@ const Orders = ({navigation}) => {
             ? null
             : ScheduleOrders.map((item, key) => (
                 <TouchableOpacity
+                activeOpacity={0.9}
                   onPress={() =>
                     navigation.navigate('OrderDetail', {
                       orderid: item._id,
@@ -240,8 +241,9 @@ const Orders = ({navigation}) => {
             ? null
             : OngoingOrders.map((item, key) => (
                 <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate('TripRoute', {
+                activeOpacity={0.9}
+                  onPress={async() =>
+                   { navigation.navigate('TripRoute', {
                       orderid: item._id,
                       driverLng: item.driver_Long,
                       driverLat: item.driver_Lat,
@@ -251,9 +253,11 @@ const Orders = ({navigation}) => {
                       dropoffLng: item.dropoff_log,
                       navplace: 'ongoing',
                     })
+                    await AsyncStorage.setItem('OngoingStatus', item._id);
+                  } 
                   }>
                   <OrdersCards
-                    time={item.flight_time+item.driver_Long+item.driver_Lat+item.pickup_lat+item.pickup_log}
+                    time={item.flight_time}
                     price={item.total_amount + '$'}
                     pickupLoc={item.pickup_location}
                     dropoffLoc={item.dropoff_location}
@@ -265,6 +269,7 @@ const Orders = ({navigation}) => {
             ? null
             : CompleteOrders.map((item, key) => (
                 <TouchableOpacity
+                activeOpacity={0.9}
                   onPress={() =>
                     navigation.navigate('OrderDetail', {
                       orderid: item._id,
@@ -286,6 +291,7 @@ const Orders = ({navigation}) => {
             ? null
             : CancelOrders.map((item, key) => (
                 <TouchableOpacity
+                activeOpacity={0.9}
                   onPress={() =>
                     navigation.navigate('OrderDetail', {
                       orderid: item._id,

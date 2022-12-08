@@ -2,6 +2,7 @@ const Colors = {
     Appthemecolor:'#4D419E',
     authinputs:'#4D419E26',
     Appthemeorangecolor:'#F69920',
+    apporange:'rgba(246, 153, 32, 0.7)',
     BottomTabcolor:'#3590C4',
     appinputscolor:'#E1E1E14F',
 inputtoptext:'#303030',

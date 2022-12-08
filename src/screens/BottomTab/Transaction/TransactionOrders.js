@@ -24,15 +24,19 @@ import styles from './styles';
 import Colors from '../../../utills/Colors';
 
 /////////////////app images///////////
-import { appImages } from '../../../constant/images'
+import { appImages } from '../../../constant/images';
 
-const Transaction = ({ navigation }) => {
+const TransactionOrders = ({ navigation,route }) => {
+
+    //////////////previous data///////
+    const[predata]=useState(route.params)
+    //Modal States
+    const [modalVisible, setModalVisible] = useState(false);
 
     ///////////////////redux states///////////////////////
     const {hoteltype, phone_no,top_tab_driver,top_tab_payment,top_tab_vehicle } =
     useSelector(state => state.userReducer);
   const dispatch = useDispatch();
-
 
             /////////////main menu status states/////////////
     const [Transaction, setTransaction] = useState('')
@@ -40,14 +44,14 @@ const Transaction = ({ navigation }) => {
             var user = await AsyncStorage.getItem('Userid');
             axios({
                 method: 'POST',
-                url: BASE_URL + 'api/invoiceAdmin/getAllInvoiceByHotelId',
+                url: BASE_URL + 'api/invoiceAdmin/getInvoiceAdmin',
                 data:{
-                    hotel_id:user
+                    _id:predata.invoiceid,
                 }
             })
                 .then(async function (response) {
                     console.log("list data here ", response.data)
-                    setTransaction(response.data)
+                    setTransaction(response.data[0].order_id)
                 })
                 .catch(function (error) {
                     console.log("error", error)
@@ -68,23 +72,23 @@ const Transaction = ({ navigation }) => {
             <StatusBar backgroundColor={'black'} barStyle="light-content" />
             <CustomHeader
           headerlabel={'Transaction History'}
-          headerplace={'transaction'}
-          onpressimage={()=> navigation.navigate('UninvoiceOrders')}
+
         />
 
 {Transaction===""?null:
 Transaction.map((item, key) => (
-    <TouchableOpacity
-    activeOpacity={0.9}
-    onPress={()=>navigation.navigate('TransactionOrders',{invoiceid:item._id,navplace:'Transaction'})}>
-<TransactionCard 
-                                      invoiceno={item.InvoiceNo}
-                                       invoicestatus={item.status}
-                                       invoiceamount={item.totalAmount}
-                                       invoiceorders={item.order_id.length}
-                                    cardtype={'invoice'}
+    // <TouchableOpacity
+    // activeOpacity={0.9}
+    // onPress={()=>navigation.navigate('InvoiceList',{orderid:item._id,navplace:'Schedule'})}>
+<TransactionCard
+                                     invoivcestatus={item.invoiceStatus}
+                                      orderno={item.orderNo}
+                                      amount={item.total_amount}
+                                      datetime={item.flight_date+'/'+item.flight_time}
+                                      drivername={item.driver_id.name}
+                                      dispatchername={item.dispacher_id.name_of_company}
                                    />
-                                   </TouchableOpacity>
+                                //    </TouchableOpacity>
 ))
 }
 
@@ -96,4 +100,4 @@ Transaction.map((item, key) => (
     )
 };
 
-export default Transaction;
+export default TransactionOrders;

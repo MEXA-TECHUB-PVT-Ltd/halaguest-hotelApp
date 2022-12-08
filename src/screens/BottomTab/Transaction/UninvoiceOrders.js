@@ -24,9 +24,14 @@ import styles from './styles';
 import Colors from '../../../utills/Colors';
 
 /////////////////app images///////////
-import { appImages } from '../../../constant/images'
+import { appImages } from '../../../constant/images';
 
-const Transaction = ({ navigation }) => {
+const UninvoiceOrders = ({ navigation,route }) => {
+
+    //////////////previous data///////
+    const[predata]=useState(route.params)
+    //Modal States
+    const [modalVisible, setModalVisible] = useState(false);
 
     ///////////////////redux states///////////////////////
     const {hoteltype, phone_no,top_tab_driver,top_tab_payment,top_tab_vehicle } =
@@ -35,19 +40,19 @@ const Transaction = ({ navigation }) => {
 
 
             /////////////main menu status states/////////////
-    const [Transaction, setTransaction] = useState('')
-        const GetTransaction = async () => {
+    const [Uninvoice, setUninvoice] = useState('')
+        const GetUninvoice = async () => {
             var user = await AsyncStorage.getItem('Userid');
             axios({
                 method: 'POST',
-                url: BASE_URL + 'api/invoiceAdmin/getAllInvoiceByHotelId',
+                url: BASE_URL + 'api/Order/getOrderWithoutInvoicing',
                 data:{
-                    hotel_id:user
+                    invoicing:'false',
                 }
             })
                 .then(async function (response) {
                     console.log("list data here ", response.data)
-                    setTransaction(response.data)
+                    setUninvoice(response.data)
                 })
                 .catch(function (error) {
                     console.log("error", error)
@@ -56,7 +61,7 @@ const Transaction = ({ navigation }) => {
             
 
     useEffect(() => {
-        GetTransaction()
+        GetUninvoice()
       
     }, []);
 
@@ -68,23 +73,23 @@ const Transaction = ({ navigation }) => {
             <StatusBar backgroundColor={'black'} barStyle="light-content" />
             <CustomHeader
           headerlabel={'Transaction History'}
-          headerplace={'transaction'}
-          onpressimage={()=> navigation.navigate('UninvoiceOrders')}
+
         />
 
-{Transaction===""?null:
-Transaction.map((item, key) => (
-    <TouchableOpacity
-    activeOpacity={0.9}
-    onPress={()=>navigation.navigate('TransactionOrders',{invoiceid:item._id,navplace:'Transaction'})}>
-<TransactionCard 
-                                      invoiceno={item.InvoiceNo}
-                                       invoicestatus={item.status}
-                                       invoiceamount={item.totalAmount}
-                                       invoiceorders={item.order_id.length}
-                                    cardtype={'invoice'}
+{Uninvoice===""?null:
+Uninvoice.map((item, key) => (
+    // <TouchableOpacity
+    // activeOpacity={0.9}
+    // onPress={()=>navigation.navigate('InvoiceList',{orderid:item._id,navplace:'Schedule'})}>
+<TransactionCard
+                                     invoivcestatus={item.invoiceStatus}
+                                      orderno={item.orderNo}
+                                      amount={item.total_amount}
+                                      datetime={item.flight_date+'/'+item.flight_time}
+                                      drivername={item.driver_id.name}
+                                      dispatchername={item.driver_id.dispacher_id[0].name_of_company}
                                    />
-                                   </TouchableOpacity>
+                                //    </TouchableOpacity>
 ))
 }
 
@@ -96,4 +101,4 @@ Transaction.map((item, key) => (
     )
 };
 
-export default Transaction;
+export default UninvoiceOrders;

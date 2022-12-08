@@ -1,6 +1,10 @@
 import * as React from 'react';
 import {View, Text} from 'react-native';
-import {NavigationContainer, useNavigation,createNavigationContainerRef} from '@react-navigation/native';
+import {
+  NavigationContainer,
+  useNavigation,
+  createNavigationContainerRef,
+} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 //////////////notification/////////////////
@@ -29,9 +33,11 @@ import FindingDriver from './src/screens/StackScreens/Trip/TripRoute/FindingDriv
 import Location from './src/screens/StackScreens/Trip/Location/Location';
 import TrackLocation from './src/screens/StackScreens/Trip/Location/TrackLocation';
 import Notification from './src/screens/StackScreens/Notification/Notification';
+import TransactionOrders from './src/screens/BottomTab/Transaction/TransactionOrders';
+import UninvoiceOrders from './src/screens/BottomTab/Transaction/UninvoiceOrders';
 
 const Stack = createNativeStackNavigator();
-const navigationRef = createNavigationContainerRef()
+const navigationRef = createNavigationContainerRef();
 function App(props) {
   const [loading, setLoading] = React.useState(true);
   const [initialRoute, setInitialRoute] = React.useState('AuthNav');
@@ -43,9 +49,9 @@ function App(props) {
         'Notification caused app to open from background state:',
         remoteMessage.notification,
       );
-      console.log("notification here", JSON.stringify(remoteMessage.data.type))
-    //setInitialRoute(remoteMessage.data.type)
-    navigationRef.navigate(remoteMessage.data.type);
+      console.log('notification here', JSON.stringify(remoteMessage.data.type));
+      //setInitialRoute(remoteMessage.data.type)
+      navigationRef.navigate(remoteMessage.data.type);
       //navigation.navigate(remoteMessage.data.type);
     });
 
@@ -58,7 +64,7 @@ function App(props) {
             'Notification caused app to open from quit state:',
             remoteMessage.notification,
           );
-          console.log("notification here",remoteMessage.data.type)
+          console.log('notification here', remoteMessage.data.type);
           setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
         }
         setLoading(false);
@@ -193,9 +199,23 @@ function App(props) {
               headerShown: false,
             }}
           />
-              <Stack.Screen
+          <Stack.Screen
             name="Notification"
             component={Notification}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="TransactionOrders"
+            component={TransactionOrders}
+            options={{
+              headerShown: false,
+            }}
+          />
+             <Stack.Screen
+            name="UninvoiceOrders"
+            component={UninvoiceOrders}
             options={{
               headerShown: false,
             }}

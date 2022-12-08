@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     lefticonview:
     { 
         justifyContent: 'center', 
-        marginLeft: wp(5)
+        marginLeft: wp(3)
      },
      righticonview:
      { 
@@ -41,8 +41,8 @@ const styles = StyleSheet.create({
     },
     logo:
     {
-        height:wp(16),
-        width:wp(16)
+        height:wp(9),
+        width:wp(9)
       },
   
 label:

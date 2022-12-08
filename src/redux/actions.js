@@ -265,3 +265,34 @@ export const setCityId = city_id => dispatch => {
         payload: city_id,
     });
 };
+
+  ////////////////Order Status states and Function/////////////////////
+  export const SET_SCHEDULE_STATUS = 'SET_SCHEDULE_STATUS';
+  export const SET_ONGOING_STATUS = 'SET_ONGOING_STATUS';
+  export const SET_COMPLETED_STATUS = 'SET_COMPLETED_STATUS';
+  export const SET_CANCEL_STATUS = 'SET_CANCEL_STATUS';
+
+  export const setScheduleStatus = schedule_status => dispatch => {
+    dispatch({
+        type: SET_SCHEDULE_STATUS,
+        payload: schedule_status,
+    });
+};
+export const setOngoingStatus = ongoing_status => dispatch => {
+    dispatch({
+        type: SET_ONGOING_STATUS,
+        payload: ongoing_status,
+    });
+};
+export const setCompletedStatus = completed_status => dispatch => {
+    dispatch({
+        type: SET_COMPLETED_STATUS,
+        payload: completed_status,
+    });
+};
+export const setCancelStatus = cancel_status => dispatch => {
+    dispatch({
+        type: SET_CANCEL_STATUS,
+        payload: cancel_status,
+    });
+};

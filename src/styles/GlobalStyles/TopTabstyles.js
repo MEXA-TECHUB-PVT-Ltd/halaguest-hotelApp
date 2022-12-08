@@ -18,7 +18,7 @@ TopTabView:
    alignItems:"center",
    alignSelf:'center',
    marginBottom:hp(5),
-   marginTop:hp(5)
+   marginTop:hp(1)
    },
 
 });
