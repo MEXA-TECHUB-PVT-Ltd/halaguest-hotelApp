@@ -253,7 +253,7 @@ const Orders = ({navigation}) => {
                       dropoffLng: item.dropoff_log,
                       navplace: 'ongoing',
                     })
-                    await AsyncStorage.setItem('OngoingStatus', item._id);
+                    await AsyncStorage.setItem('OngoingStatus', JSON.stringify(item));
                   } 
                   }>
                   <OrdersCards

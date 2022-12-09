@@ -93,8 +93,10 @@ const TripRoute = ({navigation, route}) => {
       // longitude: previousdata.pickupLng,
     },
     destinationCords: {
-      latitude: previousdata.dropoffLat,
-      longitude: previousdata.dropoffLng,
+        latitude: previousdata.pickupLat,
+      longitude: previousdata.pickupLng,
+      // latitude: previousdata.dropoffLat,
+      // longitude: previousdata.dropoffLng,
     },
     isLoading: false,
     coordinate: new AnimatedRegion({
@@ -148,9 +150,11 @@ const TripRoute = ({navigation, route}) => {
   };
 
   const fetchTime = (d, t) => {
+    setroutetime(t)
     updateState({
       distance: d,
       time: t,
+
     });
   };
 
@@ -176,7 +180,8 @@ const TripRoute = ({navigation, route}) => {
   useEffect(() => {
     if (isfocussed) {
     GetOrderDetail();
-    CheckStatus()
+    CallApi()
+    //CheckStatus()
     }
     ref.current?.setAddressText('Rawalpindi');
     const interval = setInterval(() => {
@@ -185,18 +190,59 @@ const TripRoute = ({navigation, route}) => {
     return () => clearInterval(interval);
   }, [isfocussed,OrderStatus]);
 ////////////////CHECK STATUS//////////
-const CheckStatus=()=>{
+const CheckStatus=async()=>{
 
   if(OrderStatus === 'completed')
   {
     setModalVisible(true)
+    await AsyncStorage.removeItem('OngoingStatus');
   }
   else
   {
 console.log('same ongong status',OrderStatus)
   }
 }
-
+const CheckRideStatus = async () => {
+  console.log('here ids',orderid)
+      axios({
+        method: 'POST',
+        url: BASE_URL + 'api/Order/checkRideStatus',
+        data: {
+          _id: orderid,
+        },
+      })
+        .then(function (response) {
+        console.log(' Cancel response', JSON.stringify(response.data));
+       navigation.navigate("TripCompleted",{  
+        orderid: orderid,
+        pickupLat: PickupLat,
+        pickupLng: PickupLng,
+        dropoffLat: DropoffLat,
+        dropoffLng: DropoffLng})
+          
+        })
+        .catch(function (error) {
+          console.log('error', error);
+        });
+    };
+////////////////Check api STATUS//////////
+const[routetime,setroutetime]=useState()
+const CallApi=async()=>{
+console.log("here",routetime*60)
+var duration=routetime*60
+var count=0
+if(count ==0){
+setTimeout(() => {
+  count+1
+  CheckRideStatus()
+        }, duration);
+        }
+        else{
+          setTimeout(() => {
+            CheckRideStatus()
+                  }, 120);
+        }
+}
   //order detail data states and apin function
   ///////////////HOTEL//////////////////
   const [HotelToken, setHotelToken] = useState('');
@@ -239,8 +285,8 @@ console.log('same ongong status',OrderStatus)
         setDriverCar(response.data[0].driver_id.vehicle_detail_id[0].make);
         setPickupLocation(response.data[0].pickup_location);
         setDropoffLocation(response.data[0].dropoff_location);
-        setPickupLat(Number(response.data[0].pickup_lat));
-        setPickupLng(Number(response.data[0].pickup_log));
+        setPickupLat(response.data[0].pickup_lat);
+        setPickupLng(response.data[0].pickup_log);
         setDropoffLat(response.data[0].dropoff_lat);
         setDropoffLng(response.data[0].dropoff_log);
         setOrderStatus(response.data[0].status);
@@ -286,8 +332,8 @@ console.log('same ongong status',OrderStatus)
               origin={curLoc}
               destination={destinationCords}
               apikey={MapKeyApi}
-              strokeWidth={6}
-              strokeColor="red"
+              strokeWidth={3}
+              strokeColor="black"
               optimizeWaypoints={true}
               onStart={params => {
                 console.log(`Started routing between "${params.origin}" 
