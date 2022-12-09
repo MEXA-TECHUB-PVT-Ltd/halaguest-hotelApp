@@ -33,6 +33,9 @@ setDropoffLocationLat,setDropoffLocationLng,setDropoffLocationAddress
 ////////////////////app images/////////////////
 import { appImages } from '../../../../constant/images';
 
+////////////////location functions////////////////
+import { locationPermission,getLiveLocation } from '../../../../api/CurrentLocation';
+
 
 const Location = ({navigation,route}) => {
 console.log('here from previous data:',route.params)
@@ -51,8 +54,8 @@ const[predata]=useState(route.params)
     const [eror, setError]=useState()
 const [region, setRegion] = useState();
 const [marker, setMarker] = useState('');
-const [pinlat, setPinLat] = useState(0);
-const [pinlog, setPinLog] = useState(0);
+const [pinlat, setPinLat] = useState();
+const [pinlog, setPinLog] = useState();
 
 /////////////user current location////////////////
 const GetcurrLocation=()=>{
@@ -97,35 +100,50 @@ const GetcurrLocation=()=>{
                   }
               );
 }
+const getLiveLocation = async () => {
+  Geocoder.init(MapKeyApi);
+  const locPermissionDenied = await locationPermission();
+  if (locPermissionDenied) {
+    const {latitude, longitude, heading} = await getCurrentLocation();
+    // console.log("get live location after 4 second",latitude,longitude,heading)
+    setPinLat(latitude);
+    setPinLog(longitude);
+    Geocoder.from(latitude, longitude).then(json => {
+      var addressComponent = json.results[0].formatted_address;
+      setAddress(addressComponent);
+    });
+  }
+};
 useEffect(() => {
   if (isfocussed) {
-    GetcurrLocation()
-}
-
-  },[isfocussed]);
+    getLiveLocation();
+  }
+}, [isfocussed]);
 
 
   return (
       <View style={[styles.container]}>
-        {pinlat===0 && pinlog===0?
-        <View></View>
-        :
+           {pinlat && pinlog > 0 ? (
         <MapView
-        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-        style={styles.map}
-       initialRegion={{latitude:33.2,longitude:73.21,latitudeDelta:5,longitudeDelta:3}}
-        //region={region}
-        >
-
-              {/* <MapView.Marker
-              coordinate={marker}
-                title={'title'}
-                description={'here'}
-              />
-       */}
-        
-      </MapView>
-        }
+          style={[styles.mapStyle]}
+          provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+          initialRegion={{
+            latitude: pinlat,
+            longitude: pinlog,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}>
+          {pinlat && pinlog > 0 ? (
+            <Marker
+              draggable={true}
+              coordinate={{
+                latitude: pinlat,
+                longitude: pinlog,
+              }}
+            />
+          ) : null}
+        </MapView>
+      ) : null}
 
         <View style={{marginLeft:wp(3),marginTop:hp(2),marginBottom:hp(1)}}>
         <Ionicons name={'chevron-back'} size={30} 
@@ -174,9 +192,9 @@ navplace={'trip'}
       }
       {
         predata.navplace === 'DropoffLocation'?
-        dispatch(setDropoffLocationLng(location.lat))
+        dispatch(setDropoffLocationLng(location.lng))
     :
-    dispatch(setPickupLocationLng(location.lat))
+    dispatch(setPickupLocationLng(location.lng))
   }
           setRegion({
             latitude: location.lat,

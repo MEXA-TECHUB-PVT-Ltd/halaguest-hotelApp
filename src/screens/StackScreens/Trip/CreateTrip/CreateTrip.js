@@ -108,7 +108,7 @@ const CreateTrip = ({navigation,route}) => {
   //////////////////////Api Calling/////////////////
   const CreateTrip = async () => {
     var user= await AsyncStorage.getItem('Userid')
-    console.log("order request function",user,user_account_detail,condition_id,car_type_id,car_AC)
+    // console.log("order request function",user,user_account_detail,condition_id,car_type_id,car_AC)
     axios({
       method: 'POST',
       url: BASE_URL + 'api/Order/createOrder',
@@ -127,7 +127,7 @@ const CreateTrip = ({navigation,route}) => {
         driver_notes: drivernotes,
         estimated_amount: trip_amount,
         total_amount: trip_total_amount,
-        status: 'schedule',
+        status: 'created',
         cancellation_reason: '',
         canceled_by: '',
         canceled_by_id: '',
@@ -139,7 +139,7 @@ const CreateTrip = ({navigation,route}) => {
         console.log('response', JSON.stringify(response.data));
             setloading(0);
           setdisable(0);
-          navigation.navigate('FindingDriver')
+          navigation.navigate('Orders')
           //setModalVisible(true)
       })
       .catch(function (error) {

@@ -30,7 +30,9 @@ const CustomModal = (props) => {
               <View style={{justifyContent:'center', 
               alignItems:'center',marginBottom:hp(2),marginTop:hp(3),
               alignSelf:'center'}}>
-                       <Text style={styles.modaltext}>
+                       <Text style={styles.modaltext}
+                                        numberOfLines={3}
+                       >
                             {props.text}</Text>
               </View>
               <View style={{justifyContent:'center', 

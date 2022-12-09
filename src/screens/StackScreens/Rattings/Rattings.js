@@ -24,7 +24,6 @@ import Multilineinputstyles from '../../../styles/GlobalStyles/Multilineinputsty
 import Inputstyles from '../../../styles/GlobalStyles/Inputstyles';
 import { widthPercentageToDP as wp ,heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
-
 //////////////////////////app api/////////////////////////
 import axios from 'axios';
 import { BASE_URL } from '../../../utills/ApiRootUrl';
@@ -65,8 +64,7 @@ console.log("doctor data here in reviews:", route.params)
     })
     }
       useEffect(() => {
-     
-         // GetProfileData()
+     GetProfileData()
     },[]);
 
     ////////////add stsates////////

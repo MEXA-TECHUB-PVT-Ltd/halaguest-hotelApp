@@ -10,6 +10,9 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp }
     ////////////app icons////////////
     import Icon from 'react-native-vector-icons/Ionicons';
 
+    //////////////////app images///////////////////
+    import { appImages } from '../../../constant/images';
+
     //////////////app pakages/////////////
 import {
     Avatar,
@@ -21,7 +24,7 @@ const ProfileCard = (props) => {
 
         <Avatar.Image
        // source={{uri:props.hotellogo}}
-           source={require('../../../assets/dataimages/hotel.png')}
+           source={appImages.ProfileUser}
             size={wp(25)}
             style={{backgroundColor:Colors.appgreycolor}}
         />

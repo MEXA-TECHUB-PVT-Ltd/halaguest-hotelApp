@@ -5,6 +5,7 @@ import {
 
   ////////////////APP STATES/////////////////////
   SET_HOTEL_TYPE,
+  SET_HOTEL_TYPE_ID,
 
   ////////////////////Account Data Submition////////////////
   SET_HOTEL_SUBMIT_ID,
@@ -40,6 +41,20 @@ import {
   SET_DROPOFF_LOCATION_LAT,
   SET_DROPOFF_LOCATION_LNG,
   SET_DROPOFF_LOCATION_ADDRESS,
+
+  ////////////////Locations STATES/////////////////////
+  SET_COUNTRY_NAME,
+  SET_COUNTRY_ID,
+  SET_STATE_NAME,
+  SET_STATE_ID,
+  SET_CITY_NAME,
+  SET_CITY_ID,
+
+  //////////////////////////order status///////////
+  SET_SCHEDULE_STATUS,
+  SET_ONGOING_STATUS,
+  SET_COMPLETED_STATUS,
+  SET_CANCEL_STATUS,
 } from './actions';
 
 const initialState = {
@@ -49,7 +64,7 @@ const initialState = {
 
   ////////////////APP STATES/////////////////////
   hoteltype: '',
-  phone_no: '',
+  hoteltype_id: '',
 
   ////////////////////Account Data Submition////////////////
   hotel_submit_id: '',
@@ -86,6 +101,20 @@ const initialState = {
   dropoff_location_lat: '',
   dropoff_location_lng: '',
   dropoff_location_address: '',
+
+  ////////////////Locations STATES/////////////////////
+  country_name: '',
+  country_id: '',
+  state_name: '',
+  state_id: '',
+  city_name: '',
+  city_id: '',
+
+  ////////////////ORDER STATUS////////////
+  schedule_status: true,
+  ongoing_status: false,
+  completed_status: false,
+  cancel_status: false,
 };
 
 function userReducer(state = initialState, action) {
@@ -99,6 +128,8 @@ function userReducer(state = initialState, action) {
     ////////////////APP STATES/////////////////////
     case SET_HOTEL_TYPE:
       return {...state, hoteltype: action.payload};
+    case SET_HOTEL_TYPE_ID:
+      return {...state, hoteltype_id: action.payload};
 
     ////////////////////Account Data Submition////////////////
     case SET_HOTEL_SUBMIT_ID:
@@ -157,6 +188,30 @@ function userReducer(state = initialState, action) {
       return {...state, dropoff_location_lng: action.payload};
     case SET_DROPOFF_LOCATION_ADDRESS:
       return {...state, dropoff_location_address: action.payload};
+
+    ////////////////Locations STATES/////////////////////
+    case SET_COUNTRY_NAME:
+      return {...state, country_name: action.payload};
+    case SET_COUNTRY_ID:
+      return {...state, country_id: action.payload};
+    case SET_STATE_NAME:
+      return {...state, state_name: action.payload};
+    case SET_STATE_ID:
+      return {...state, state_id: action.payload};
+    case SET_CITY_NAME:
+      return {...state, city_name: action.payload};
+    case SET_CITY_ID:
+      return {...state, city_id: action.payload};
+
+    //////////////////////ORDER STATUS////////////
+    case SET_SCHEDULE_STATUS:
+      return {...state, schedule_status: action.payload};
+    case SET_ONGOING_STATUS:
+      return {...state, ongoing_status: action.payload};
+    case SET_COMPLETED_STATUS:
+      return {...state, completed_status: action.payload};
+    case SET_CANCEL_STATUS:
+      return {...state, cancel_status: action.payload};
 
     default:
       return state;

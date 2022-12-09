@@ -7,7 +7,7 @@ import {
 
 //////////////////////app components///////////////
 import CustomHeader from '../../../components/Header/CustomHeader';
-import OrdersCards from '../../../components/CustomCards/OrderCards/Orders';
+import TransactionCard from '../../../components/CustomCards/TransactionCard/TransactionCard';
 
 ////////////////////redux////////////
 import {useSelector, useDispatch} from 'react-redux';
@@ -24,14 +24,9 @@ import styles from './styles';
 import Colors from '../../../utills/Colors';
 
 /////////////////app images///////////
-import { appImages } from '../../../constant/images';
-
-
+import { appImages } from '../../../constant/images'
 
 const Transaction = ({ navigation }) => {
-
-    //Modal States
-    const [modalVisible, setModalVisible] = useState(false);
 
     ///////////////////redux states///////////////////////
     const {hoteltype, phone_no,top_tab_driver,top_tab_payment,top_tab_vehicle } =
@@ -42,10 +37,13 @@ const Transaction = ({ navigation }) => {
             /////////////main menu status states/////////////
     const [Transaction, setTransaction] = useState('')
         const GetTransaction = async () => {
-
+            var user = await AsyncStorage.getItem('Userid');
             axios({
-                method: 'GET',
-                url: BASE_URL + 'api/Order/hotelOrdersScheduled/63636a39fdb2d73b27d198f8',
+                method: 'POST',
+                url: BASE_URL + 'api/invoiceAdmin/getAllInvoiceByHotelId',
+                data:{
+                    hotel_id:user
+                }
             })
                 .then(async function (response) {
                     console.log("list data here ", response.data)
@@ -70,18 +68,21 @@ const Transaction = ({ navigation }) => {
             <StatusBar backgroundColor={'black'} barStyle="light-content" />
             <CustomHeader
           headerlabel={'Transaction History'}
-
+          headerplace={'transaction'}
+          onpressimage={()=> navigation.navigate('UninvoiceOrders')}
         />
 
 {Transaction===""?null:
 Transaction.map((item, key) => (
-    <TouchableOpacity onPress={()=>navigation.navigate('OrderDetail',{orderid:item._id,navplace:'Schedule'})}>
-<OrdersCards
-                                      
-                                      time={item.flight_time}
-                                       price={item.total_amount+'$'}
-                                       pickupLoc={item.pickup_location}
-                                       dropoffLoc={item.dropoff_location}
+    <TouchableOpacity
+    activeOpacity={0.9}
+    onPress={()=>navigation.navigate('TransactionOrders',{invoiceid:item._id,navplace:'Transaction'})}>
+<TransactionCard 
+                                      invoiceno={item.InvoiceNo}
+                                       invoicestatus={item.status}
+                                       invoiceamount={item.totalAmount}
+                                       invoiceorders={item.order_id.length}
+                                    cardtype={'invoice'}
                                    />
                                    </TouchableOpacity>
 ))

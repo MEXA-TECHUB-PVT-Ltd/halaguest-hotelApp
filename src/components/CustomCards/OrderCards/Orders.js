@@ -59,7 +59,7 @@ const OrdersCards = (props) => {
                         <Text style={styles.itemmaintext}>{props.pickupLoc}
                         </Text>
                         </View>
-            <DashedLine axis='vertical' dashLength={3} color={'#3590C4'} style={{ paddingLeft:wp(2.5), height:hp(4) ,color:'#3590C4' }} />
+            <DashedLine axis='vertical' dashLength={3} color={'#3590C4'} style={{ paddingLeft:wp(3.2), height:hp(4) ,color:'#3590C4' }} />
                         <View style={{flexDirection:'row',alignItems:'center'}}>
                         <Icon name={'location'} size={25} 
           color= {Colors.BottomTabcolor}

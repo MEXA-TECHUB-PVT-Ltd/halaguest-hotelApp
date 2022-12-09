@@ -5,6 +5,8 @@ import {
     Image, View, Text, TouchableOpacity, TextInput,ActivityIndicator
 } from 'react-native';
 
+///////////////////react native navigation///////////////
+import { useIsFocused } from '@react-navigation/native';
 
 //////////////////app icons////////////////
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -32,8 +34,9 @@ import Inputstyles from '../../../styles/GlobalStyles/Inputstyles';
 
 const GuestsList = ({ navigation,route }) => {
 
-    //Modal States
-    const [modalVisible, setModalVisible] = useState(false);
+       ////////////isfocused//////////
+  const isfocussed = useIsFocused()
+
 
     ///////////////////redux states///////////////////////
     const {hoteltype, phone_no} =
@@ -61,9 +64,10 @@ const GuestsList = ({ navigation,route }) => {
         }
 
     useEffect(() => {
+        if (isfocussed) {
         GetGuests()
-      
-    }, []);
+        }
+    }, [isfocussed]);
 
     /////////////////>/navigation function////////////
     const navfunc=(props)=>{

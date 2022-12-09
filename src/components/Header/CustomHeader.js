@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Dimensions,Image } from 'react-native';
+import { View, Text, StyleSheet, Dimensions,Image, TouchableOpacity } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -16,7 +16,7 @@ import { appImages } from '../../constant/images';
 ////////////////app redux///////////
 import { useSelector } from 'react-redux';
 
-const CustomHeader = ({ navigation, headerlabel,iconPress,icon,
+const CustomHeader = ({ navigation, headerlabel,iconPress,icon,headerplace,onpressimage,
   onpresseacrh,type,
   searchicon }) => {
     ////////////////////redux/////////////////////
@@ -24,7 +24,7 @@ const CustomHeader = ({ navigation, headerlabel,iconPress,icon,
 
   return (
       <View style={[styles.headerView]} >
-        <View style={styles.iconview}>
+        <View style={styles.lefticonview}>
           <Icon name={icon} size={30} 
           color= {'white'}
            onPress={iconPress} />
@@ -39,11 +39,23 @@ null
             </View>
 
 
-          <View style={styles.iconview}>
-          <Icon name={searchicon} size={30} 
-          color= {'white'}
-          onPress={onpresseacrh} 
-           />
+          <View style={styles.righticonview}>
+            {
+              headerplace === 'transaction'?
+              <TouchableOpacity onPress={onpressimage}>
+      <Image
+              source={appImages.uninvoice}
+              style={styles.logo}
+              resizeMode='contain'
+            />
+              </TouchableOpacity>
+        :
+            <Icon name={searchicon} size={30} 
+            color= {'white'}
+            onPress={onpresseacrh} 
+             />
+            }
+     
    
         </View>
 
